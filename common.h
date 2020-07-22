@@ -3,6 +3,9 @@
 
 #include "image.h"
 
+#define SEED 42
+#define SPINNER_STR "rendering buddhabrot"
+
 /*
    X0,Y0,X1,Y1  define the coordinate range (lower left to upper right) of
                 the region to render
@@ -17,8 +20,6 @@ extern const double X1;
 extern const double Y0;    /* Y is the imaginary axis aligned vertically */
 extern const double Y1;
 extern const double ESCAPE_MAG;
-
-#define SEED 42
 
 #ifdef __cplusplus
 extern "C" {
