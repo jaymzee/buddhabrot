@@ -3,52 +3,29 @@ import sys
 import os
 import numpy as np
 from PIL import Image
-
-def print_stats(arr, header):
-    if header:
-        print(header)
-        indent = "    "
-    else:
-        indent = ""
-    print("%smin: %.3f, max: %.3f" % (indent, np.min(arr), np.max(arr)))
-    print("%smedian: %.3f, mean: %.3f, std: %.3f" % 
-          (indent, np.median(arr), np.mean(arr), np.std(arr)))
+from common import load_image, clip_image
 
 
 def main():
-    clip_th = None
+    clip_threshold = None
     # process command line arguments
     if len(sys.argv) >= 2:
         in_filename = sys.argv[1]
         if len(sys.argv) >= 3:
-            clip_th = int(sys.argv[2])
+            clip_threshold = int(sys.argv[2])
     else:
         print("Usage: pilshow filename [threshold]")
         exit(1)
 
-    # read rendered image into numpy array
-    print("reading %s" % in_filename)
-    init_arr = np.loadtxt(in_filename)
-    print_stats(init_arr, "input file statistics:")
-
-    # clip values
-    if clip_th is None:
-        clipped_arr = init_arr
-    else:
-        print("clipping values abouve %d" % clip_th)
-        clipped_arr = np.minimum(init_arr, clip_th)
-        diff_arr = init_arr - clipped_arr
-        diff_count = np.count_nonzero(diff_arr)
-        print("clipped %d pixels (%.3f %%)" % 
-              (diff_count, 100.0 * diff_count / diff_arr.size))
-        print_stats(clipped_arr, "statistics after clipping:")
+    init_arr = load_image(in_filename)
+    clipped_arr = clip_image(init_arr, clip_threshold)
 
     # rescale to 255 levels of gray
     max_intensity = np.max(clipped_arr)
     rescaled_arr = 255.0 * clipped_arr / max_intensity
 
     # rotate image right 90 degrees
-    rot_arr = np.fliplr(rescaled_arr.T) # rotate 90 degrees
+    rot_arr = np.fliplr(rescaled_arr.T)
 
     # display image momentarily
     img = Image.fromarray(rot_arr)
