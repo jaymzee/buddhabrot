@@ -4,30 +4,36 @@
 #include "common.h"
 #include "image.h"
 
+double complex get_random_c(void)
+{
+    double rre = (double)rand() / RAND_MAX;
+    double rim = (double)rand() / RAND_MAX;
+    return (rre * (X1 - X0) + X0) + (rim * (Y1 - Y0) + Y0) * I;
+}
+
 void render_orbits(const struct image *img, int samples, int max_iter)
 {
     int *const buf = img->buffer;
     const int w = img->width;
     const int h = img->height;
     const int chunk = samples / 100;
-    complex double z, c;
+    double complex z, c;
 
+    srand(42);    /* seed random number generator */
     fprintf(stderr, "rendering     ");
     for (int n = 0; n < samples; n++) {
-        /* display progress bar */
         if (chunk > 0 && (n % chunk == 0)) {
+            /* display progress bar */
             fprintf(stderr, "\b\b\b\b%3d%%", (int)(100.0 * n / samples));
         }
-        /* get a random sample point for c */
-        c = ((double)rand() / RAND_MAX * (X1 - X0) + X0) +
-            ((double)rand() / RAND_MAX * (Y1 - Y0) + Y0) * I;
+        c = get_random_c();
         /* find out if z escapes to infinity for this c */
-        z = 0;
+        z = 0.0;
         for (int i = 0; i < max_iter; i++) {
             z = z * z + c;
             if (cabs(z) > ESCAPE_MAG) {
                 /* this c escaped so reiterate the sequence but write orbit to image this time */
-                z = 0;
+                z = 0.0;
                 while (cabs(z) <= ESCAPE_MAG) {
                     z = z * z + c;
                     /* map complex z back to image coordinates */

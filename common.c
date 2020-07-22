@@ -23,8 +23,6 @@ int main(int argc, char *argv[])
     int max_iter = 20;
     int samples = 1000;
 
-    srand(42); /* initialize random number generator,  sequence returned by rand() */
-
     /* process command line arguments */
     for (int i = 1; i < argc; i++) {
         if (strncmp("-m", argv[i], 2) == 0) {
