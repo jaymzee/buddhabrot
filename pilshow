@@ -3,7 +3,7 @@ import sys
 import os
 import numpy as np
 from PIL import Image
-from common import load_image, clip_image
+from common import load_array, clip_array
 
 
 def main():
@@ -15,10 +15,10 @@ def main():
             clip_threshold = int(sys.argv[2])
     else:
         print("Usage: pilshow filename [threshold]")
-        exit(1)
+        sys.exit(1)
 
-    init_arr = load_image(in_filename)
-    clipped_arr = clip_image(init_arr, clip_threshold)
+    init_arr = load_array(in_filename)
+    clipped_arr = clip_array(init_arr, clip_threshold)
 
     # rescale to 255 levels of gray
     max_intensity = np.max(clipped_arr)

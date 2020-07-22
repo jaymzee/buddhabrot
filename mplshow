@@ -3,7 +3,7 @@ import sys
 import os
 import numpy as np
 import matplotlib.pyplot as plt
-from common import load_image, clip_image
+from common import load_array, clip_array
 
 
 def main():
@@ -20,8 +20,8 @@ def main():
         print("Usage: mplshow filename [threshold [colormap]]")
         sys.exit(1)
 
-    init_arr = load_image(in_filename)
-    clipped_arr = clip_image(init_arr, clip_threshold)
+    init_arr = load_array(in_filename)
+    clipped_arr = clip_array(init_arr, clip_threshold)
     rot_arr = np.fliplr(clipped_arr.T)  # rotate image right 90 degrees
 
     plt.imshow(rot_arr, cmap=cmap)
