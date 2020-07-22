@@ -53,7 +53,7 @@ def main():
     img.show()
 
     # write PNG image
-    out_basename, ext = os.path.splitext(in_filename)
+    out_basename, _ = os.path.splitext(in_filename)
     out_filename = out_basename + ".png"
     print("writing PNG image to %s" % out_filename)
     img_lum = img.convert("L")

@@ -11,7 +11,8 @@ def print_stats(arr, header):
     else:
         indent = ""
     print("%smin: %.3f, max: %.3f" % (indent, np.min(arr), np.max(arr)))
-    print("%smedian: %.3f, mean: %.3f, std: %.3f" % (indent, np.median(arr), np.mean(arr), np.std(arr)))
+    print("%smedian: %.3f, mean: %.3f, std: %.3f" %
+          (indent, np.median(arr), np.mean(arr), np.std(arr)))
 
 
 def main():
@@ -26,7 +27,7 @@ def main():
                 cmap = sys.argv[3]
     else:
         print("Usage: mplshow filename [threshold [colormap]]")
-        exit(1)
+        sys.exit(1)
 
     # read rendered image into numpy array
     print("reading %s" % in_filename)
@@ -41,7 +42,8 @@ def main():
         clipped_arr = np.minimum(init_arr, clip_th)
         diff_arr = init_arr - clipped_arr
         diff_count = np.count_nonzero(diff_arr)
-        print("clipped %d pixels (%.3f %%)" % (diff_count, 100.0 * diff_count / diff_arr.size))
+        print("clipped %d pixels (%.3f %%)" %
+              (diff_count, 100.0 * diff_count / diff_arr.size))
         print_stats(clipped_arr, "statistics after clipping:")
 
     # rotate image right 90 degrees

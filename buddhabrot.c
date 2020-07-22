@@ -19,7 +19,7 @@ void render_orbits(const struct image *img, int samples, int max_iter)
     const int chunk = samples / 100;
     double complex z, c;
 
-    srand(42);    /* seed random number generator */
+    srand(SEED);    /* seed random number generator */
     fprintf(stderr, "rendering     ");
     for (int n = 0; n < samples; n++) {
         if (chunk > 0 && (n % chunk == 0)) {
@@ -32,7 +32,8 @@ void render_orbits(const struct image *img, int samples, int max_iter)
         for (int i = 0; i < max_iter; i++) {
             z = z * z + c;
             if (cabs(z) > ESCAPE_MAG) {
-                /* this c escaped so reiterate the sequence but write orbit to image this time */
+                /* this c escaped so reiterate the sequence
+                   writing orbit to image this time */
                 z = 0.0;
                 while (cabs(z) <= ESCAPE_MAG) {
                     z = z * z + c;
