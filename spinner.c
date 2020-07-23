@@ -18,4 +18,5 @@ void finish_spinner(const char *msg)
     for (int i = 0; i < n; i++) {
         fputc('\b', stderr);
     }
+    fprintf(stderr, "\033[2K");
 }

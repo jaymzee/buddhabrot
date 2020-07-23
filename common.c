@@ -14,11 +14,11 @@
                 coordinates below avoids a harsh circle near the edge.
 */
 
-const double X0 = -1.70;
-const double X1 =  0.75;
-const double Y0 = -1.50;
-const double Y1 =  1.50;
-const double ESCAPE_MAG = 2.3;
+double X0 = -1.70;
+double X1 =  0.75;
+double Y0 = -1.50;
+double Y1 =  1.50;
+double ESCAPE_MAG = 2.3;
 
 void add_image_comments(const struct image *img,
                         int argc, char *argv[],
@@ -44,6 +44,13 @@ void add_image_comments(const struct image *img,
     strcat(img->comment, buf);
 }
 
+void arg_error(const char *msg)
+{
+    fputs(msg, stderr);
+    fputc('\n', stderr);
+    exit(-1);
+}
+
 int main(int argc, char *argv[])
 {
     struct image img = { NULL, 16, 16, NULL };
@@ -64,13 +71,33 @@ int main(int argc, char *argv[])
         if (strncmp("-h", argv[i], 2) == 0) {
             img.height = atoi(argv[i] + 2);
         }
+        if (strncmp("-e", argv[i], 2) == 0) {
+            ESCAPE_MAG = atof(argv[i] + 2);
+        }
+        if (strncmp("-r", argv[i], 2) == 0) {
+            char buf[128], *p, *r[4];
+            strncpy(buf, argv[i] + 2, 128);
+            p = strtok(buf, ",");
+            for (int j = 0; j < 4; j++) {
+                if (p == NULL) {
+                    arg_error("range should be bottom left to top right"
+                              ", example: -r-2.0,-1.25,1.0,1.25");
+                }
+                r[j] = p;
+                p = strtok(NULL, ",");
+            }
+            X0 = atof(r[0]);
+            Y0 = atof(r[1]);
+            X1 = atof(r[2]);
+            Y1 = atof(r[3]);
+        }
     }
 
     img.buffer = calloc(img.width * img.height, sizeof(*img.buffer));
-    img.comment = malloc(4096);
+    img.comment = malloc(4096);     /* 4K is plenty of room for comments */
 
-    render_orbits(&img, samples, max_iter);
     add_image_comments(&img, argc, argv, samples, max_iter);
+    render_orbits(&img, samples, max_iter);
     write_image(&img);
 
     free(img.buffer);
@@ -78,3 +105,4 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
