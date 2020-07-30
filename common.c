@@ -26,25 +26,25 @@ void add_image_comments(const struct image *img,
 {
     char buf[80];
 
-    strcpy_s(img->comment, img->comment_size, "# cmdline:");
+    strcpy(img->comment, "# cmdline:");
     for (int i = 0; i < argc; i++) {
-        sprintf_s(buf, sizeof(buf), " %s", argv[i]);
-        strcat_s(img->comment, img->comment_size, buf);
+        sprintf(buf, " %s", argv[i]);
+        strcat(img->comment, buf);
     }
-    sprintf_s(buf, sizeof(buf), "\n# size: %d x %d",
+    sprintf(buf, "\n# size: %d x %d",
               img->width, img->height);
-    strcat_s(img->comment, img->comment_size, buf);
-    sprintf_s(buf, sizeof(buf), "\n# samples: %d", samples);
-    strcat_s(img->comment, img->comment_size, buf);
-    sprintf_s(buf, sizeof(buf), "\n# max iterations: %d", max_iter);
-    strcat_s(img->comment, img->comment_size, buf);
-    sprintf_s(buf, sizeof(buf), "\n# seed: %d", SEED);
-    strcat_s(img->comment, img->comment_size, buf);
-    sprintf_s(buf, sizeof(buf), "\n# escape magnitude: %g", ESCAPE_MAG);
-    strcat_s(img->comment, img->comment_size, buf);
-    sprintf_s(buf, sizeof(buf), "\n# coordinates: %g + %gi to %g + %gi",
+    strcat(img->comment, buf);
+    sprintf(buf, "\n# samples: %d", samples);
+    strcat(img->comment, buf);
+    sprintf(buf, "\n# max iterations: %d", max_iter);
+    strcat(img->comment, buf);
+    sprintf(buf, "\n# seed: %d", SEED);
+    strcat(img->comment, buf);
+    sprintf(buf, "\n# escape magnitude: %g", ESCAPE_MAG);
+    strcat(img->comment, buf);
+    sprintf(buf, "\n# coordinates: %g + %gi to %g + %gi",
               X0,Y0,X1,Y1);
-    strcat_s(img->comment, img->comment_size, buf);
+    strcat(img->comment, buf);
 }
 
 void arg_error(const char *msg)
@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
         }
         if (strncmp("-r", argv[i], 2) == 0) {
             char buf[128], *p, *r[4], *next_token;
-            strncpy_s(buf, sizeof(buf), argv[i] + 2, _TRUNCATE);
+            strncpy(buf, argv[i] + 2, sizeof(buf));
             p = strtok(buf, ",");
             for (int j = 0; j < 4; j++) {
                 if (p == NULL) {
