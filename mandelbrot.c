@@ -16,15 +16,28 @@ double Y1 = 1.25;
 void arg_error(char *msg) {
     fputs(msg, stderr);
     fputc('\n', stderr);
-    exit(-1);
+    exit(1);
 }
 
 void proc_args(int argc, char *argv[]) {
     int i, j;
     char buf[80], *p, *r[4], *next_token;
 
+    if (argc == 1) {
+        fprintf(stderr, "Usage: %s [options]\n", argv[0]);
+        fprintf(stderr, "options:\n");
+        fprintf(stderr, "    -i100    maximum number of iterations\n");
+        fprintf(stderr, "    -w1000   width of image\n");
+        fprintf(stderr, "    -h1000   height of image\n");
+        fprintf(stderr, "    -r-1.7,-1.5,0.75,1.5   z coordinate range\n");
+        fprintf(stderr, "    -fp      PGM output\n");
+        fprintf(stderr, "    -fn      NUMPY text output\n");
+        fprintf(stderr, "    -fa      ASCII art output\n");
+        exit(1);
+    }
+
     for (i = 1; i < argc; i++) {
-        if (strncmp("-m", argv[i], 2) == 0) {
+        if (strncmp("-i", argv[i], 2) == 0) {
             MAX_ITER = atoi(argv[i] + 2);
         }
         if (strncmp("-f", argv[i], 2) == 0) {

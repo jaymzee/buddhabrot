@@ -51,7 +51,7 @@ void arg_error(const char *msg)
 {
     fputs(msg, stderr);
     fputc('\n', stderr);
-    exit(-1);
+    exit(1);
 }
 
 int main(int argc, char *argv[])
@@ -60,9 +60,22 @@ int main(int argc, char *argv[])
     int max_iter = 20;
     int samples = 1000;
 
+    if (argc == 1) {
+        fprintf(stderr, "Usage: %s [options]\n", argv[0]);
+        fprintf(stderr, "options:\n");
+        fprintf(stderr, "    -i100    maximum number of iterations\n");
+        fprintf(stderr, "    -s10000  number of sample points\n");
+        fprintf(stderr, "    -w1000   width of image\n");
+        fprintf(stderr, "    -h1000   height of image\n");
+        fprintf(stderr, "    -e2.3    %s\n", 
+                "magnitude of z considered as escaping to infinity");
+        fprintf(stderr, "    -r-1.7,-1.5,0.75,1.5   z coordinate range\n");
+        exit(1);
+    }
+
     /* process command line arguments */
     for (int i = 1; i < argc; i++) {
-        if (strncmp("-m", argv[i], 2) == 0) {
+        if (strncmp("-i", argv[i], 2) == 0) {
             max_iter = atoi(argv[i] + 2);
         }
         if (strncmp("-s", argv[i], 2) == 0) {
