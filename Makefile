@@ -1,8 +1,8 @@
 CC = gcc
 CXX = g++
-CFLAGS = -O2 -std=c99 -pedantic -Werror
-CXXFLAGS = -O2 -std=c++11 -pedantic -Werror
-LFLAGS = -s -lm
+CFLAGS = -O2 -std=c11 -pedantic -Werror
+CXXFLAGS = -O2 -std=c++17 -pedantic -Werror
+LFLAGS = 
 OBJS = mandelbrot buddhabrot buddhabrotpp
 
 all: $(OBJS)
@@ -11,7 +11,7 @@ mandelbrot: mandelbrot.o
 	$(CC) -o $@ $^ $(LFLAGS)
 
 mandelbrot.o: mandelbrot.c
-	$(CC) -O2 -std=c89 -pedantic -Werror -c $<
+	$(CC) $(CFLAGS) -c $<
 
 buddhabrot: buddhabrot.o image.o spinner.o common.o
 	$(CC) -o $@ $^ $(LFLAGS)

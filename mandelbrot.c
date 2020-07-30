@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
+/* #include <unistd.h> */
 
 enum output { ASCII, PGM, NP };
 enum output output_type = ASCII;
@@ -21,7 +21,7 @@ void arg_error(char *msg) {
 
 void proc_args(int argc, char *argv[]) {
     int i, j;
-    char buf[80], *p, *r[4];
+    char buf[80], *p, *r[4], *next_token;
 
     for (i = 1; i < argc; i++) {
         if (strncmp("-m", argv[i], 2) == 0) {
@@ -46,15 +46,15 @@ void proc_args(int argc, char *argv[]) {
             RES_Y = atoi(argv[i] + 2);
         }
         if (strncmp("-r", argv[i], 2) == 0) {
-            strncpy(buf, argv[i] + 2, 80);
-            p = strtok(buf, ",");
+            strncpy_s(buf, sizeof(buf), argv[i] + 2, _TRUNCATE);
+            p = strtok_s(buf, ",", &next_token);
             for (j = 0; j < 4; j++) {
                 if (p == NULL) {
                     arg_error("range should be bottom left to top right"
                               ", example: -r-2.0,1.25,1.0,-1.25");
                 }
                 r[j] = p;
-                p = strtok(NULL, ",");
+                p = strtok_s(NULL, ",", &next_token);
             }
             X0 = atof(r[0]);
             X1 = atof(r[2]);
@@ -75,10 +75,11 @@ void proc_args(int argc, char *argv[]) {
 }
 
 void write_header(void) {
+    /* clear screen
     if (output_type == ASCII && isatty(STDOUT_FILENO)) {
-        /* clear the screen */
         fputs("\x1b[2J\x1b[0;0H", stdout);
     }
+    */
     if (output_type == PGM) {
         printf("P2\n# iterations=%d", MAX_ITER);
         printf(", coordinate range=(%g, %g)", X0, Y0);

@@ -15,16 +15,18 @@
                 coordinates below avoids a harsh circle near the edge.
 */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern double X0;    /* X is the real axis aligned horizontally */
 extern double X1;
 extern double Y0;    /* Y is the imaginary axis aligned vertically */
 extern double Y1;
 extern double ESCAPE_MAG;
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 void render_orbits(const struct image *img, int samples, int max_iter);
+
 #ifdef __cplusplus
 }
 #endif

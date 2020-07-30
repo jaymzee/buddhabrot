@@ -4,7 +4,7 @@
 #include "spinner.h"
 #include "common.h"
 
-inline double complex get_random_c(void)
+double complex get_random_c(void)
 {
     double rre = (double)rand() / RAND_MAX;
     double rim = (double)rand() / RAND_MAX;

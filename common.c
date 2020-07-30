@@ -24,24 +24,27 @@ void add_image_comments(const struct image *img,
                         int argc, char *argv[],
                         int samples, int max_iter)
 {
-    char buf[128];
-    strcpy(img->comment, "# cmdline:");
+    char buf[80];
+
+    strcpy_s(img->comment, img->comment_size, "# cmdline:");
     for (int i = 0; i < argc; i++) {
-        strcat(img->comment, " ");
-        strcat(img->comment, argv[i]);
+        sprintf_s(buf, sizeof(buf), " %s", argv[i]);
+        strcat_s(img->comment, img->comment_size, buf);
     }
-    sprintf(buf, "\n# size: %d x %d", img->width, img->height);
-    strcat(img->comment, buf);
-    sprintf(buf, "\n# samples: %d", samples);
-    strcat(img->comment, buf);
-    sprintf(buf, "\n# max iterations: %d", max_iter);
-    strcat(img->comment, buf);
-    sprintf(buf, "\n# seed: %d", SEED);
-    strcat(img->comment, buf);
-    sprintf(buf, "\n# escape magnitude: %g", ESCAPE_MAG);
-    strcat(img->comment, buf);
-    sprintf(buf, "\n# coordinates: %g + %gi to %g + %gi", X0,Y0,X1,Y1);
-    strcat(img->comment, buf);
+    sprintf_s(buf, sizeof(buf), "\n# size: %d x %d",
+              img->width, img->height);
+    strcat_s(img->comment, img->comment_size, buf);
+    sprintf_s(buf, sizeof(buf), "\n# samples: %d", samples);
+    strcat_s(img->comment, img->comment_size, buf);
+    sprintf_s(buf, sizeof(buf), "\n# max iterations: %d", max_iter);
+    strcat_s(img->comment, img->comment_size, buf);
+    sprintf_s(buf, sizeof(buf), "\n# seed: %d", SEED);
+    strcat_s(img->comment, img->comment_size, buf);
+    sprintf_s(buf, sizeof(buf), "\n# escape magnitude: %g", ESCAPE_MAG);
+    strcat_s(img->comment, img->comment_size, buf);
+    sprintf_s(buf, sizeof(buf), "\n# coordinates: %g + %gi to %g + %gi",
+              X0,Y0,X1,Y1);
+    strcat_s(img->comment, img->comment_size, buf);
 }
 
 void arg_error(const char *msg)
@@ -56,6 +59,8 @@ int main(int argc, char *argv[])
     struct image img = { NULL, 16, 16, NULL };
     int max_iter = 20;
     int samples = 1000;
+
+    fprintf(stderr, "processing commandline args...");
 
     /* process command line arguments */
     for (int i = 1; i < argc; i++) {
@@ -75,16 +80,16 @@ int main(int argc, char *argv[])
             ESCAPE_MAG = atof(argv[i] + 2);
         }
         if (strncmp("-r", argv[i], 2) == 0) {
-            char buf[128], *p, *r[4];
-            strncpy(buf, argv[i] + 2, 128);
-            p = strtok(buf, ",");
+            char buf[128], *p, *r[4], *next_token;
+            strncpy_s(buf, sizeof(buf), argv[i] + 2, _TRUNCATE);
+            p = strtok_s(buf, ",", &next_token);
             for (int j = 0; j < 4; j++) {
                 if (p == NULL) {
                     arg_error("range should be bottom left to top right"
                               ", example: -r-2.0,-1.25,1.0,1.25");
                 }
                 r[j] = p;
-                p = strtok(NULL, ",");
+                p = strtok_s(NULL, ",", &next_token);
             }
             X0 = atof(r[0]);
             Y0 = atof(r[1]);
@@ -92,16 +97,28 @@ int main(int argc, char *argv[])
             Y1 = atof(r[3]);
         }
     }
+    fprintf(stderr, "done\n");
 
+    fprintf(stderr, "allocating resources...");
     img.buffer = calloc(img.width * img.height, sizeof(*img.buffer));
-    img.comment = malloc(4096);     /* 4K is plenty of room for comments */
+    img.comment = malloc(4096); /* 4K is plenty of room for comments */
+    img.comment_size = 4096;
+    fprintf(stderr, "done\n");
 
+    fprintf(stderr, "adding comments to image...");
     add_image_comments(&img, argc, argv, samples, max_iter);
-    render_orbits(&img, samples, max_iter);
-    write_image(&img);
+    fprintf(stderr, "done\n");
 
+    render_orbits(&img, samples, max_iter);
+
+    fprintf(stderr, "writing image...");
+    write_image(&img);
+    fprintf(stderr, "done\n");
+
+    fprintf(stderr, "freeing resources...");
     free(img.buffer);
     free(img.comment);
+    fprintf(stderr, "done\n");
 
     return 0;
 }
