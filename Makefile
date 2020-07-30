@@ -1,6 +1,6 @@
 CC = gcc
 CXX = g++
-CFLAGS = -O2 -std=c11 -pedantic -Werror
+CFLAGS = -O2 -std=c99 -pedantic -Werror
 CXXFLAGS = -O2 -std=c++17 -pedantic -Werror
 LFLAGS = 
 OBJS = mandelbrot buddhabrot buddhabrotpp

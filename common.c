@@ -93,14 +93,14 @@ int main(int argc, char *argv[])
         if (strncmp("-r", argv[i], 2) == 0) {
             char buf[128], *p, *r[4], *next_token;
             strncpy_s(buf, sizeof(buf), argv[i] + 2, _TRUNCATE);
-            p = strtok_s(buf, ",", &next_token);
+            p = strtok(buf, ",");
             for (int j = 0; j < 4; j++) {
                 if (p == NULL) {
                     arg_error("range should be bottom left to top right"
                               ", example: -r-2.0,-1.25,1.0,1.25");
                 }
                 r[j] = p;
-                p = strtok_s(NULL, ",", &next_token);
+                p = strtok(NULL, ",");
             }
             X0 = atof(r[0]);
             Y0 = atof(r[1]);

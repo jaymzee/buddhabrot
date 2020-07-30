@@ -21,7 +21,7 @@ void arg_error(char *msg) {
 
 void proc_args(int argc, char *argv[]) {
     int i, j;
-    char buf[80], *p, *r[4], *next_token;
+    char buf[80], *p, *r[4];
 
     if (argc == 1) {
         fprintf(stderr, "Usage: %s [options]\n", argv[0]);
@@ -59,15 +59,15 @@ void proc_args(int argc, char *argv[]) {
             RES_Y = atoi(argv[i] + 2);
         }
         if (strncmp("-r", argv[i], 2) == 0) {
-            strncpy_s(buf, sizeof(buf), argv[i] + 2, _TRUNCATE);
-            p = strtok_s(buf, ",", &next_token);
+            strncpy(buf, argv[i] + 2, sizeof(buf));
+            p = strtok(buf, ",");
             for (j = 0; j < 4; j++) {
                 if (p == NULL) {
                     arg_error("range should be bottom left to top right"
                               ", example: -r-2.0,1.25,1.0,-1.25");
                 }
                 r[j] = p;
-                p = strtok_s(NULL, ",", &next_token);
+                p = strtok(NULL, ",");
             }
             X0 = atof(r[0]);
             X1 = atof(r[2]);
