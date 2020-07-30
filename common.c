@@ -60,8 +60,6 @@ int main(int argc, char *argv[])
     int max_iter = 20;
     int samples = 1000;
 
-    fprintf(stderr, "processing commandline args...");
-
     /* process command line arguments */
     for (int i = 1; i < argc; i++) {
         if (strncmp("-m", argv[i], 2) == 0) {
@@ -97,28 +95,19 @@ int main(int argc, char *argv[])
             Y1 = atof(r[3]);
         }
     }
-    fprintf(stderr, "done\n");
 
-    fprintf(stderr, "allocating resources...");
     img.buffer = calloc(img.width * img.height, sizeof(*img.buffer));
     img.comment = malloc(4096); /* 4K is plenty of room for comments */
     img.comment_size = 4096;
-    fprintf(stderr, "done\n");
 
-    fprintf(stderr, "adding comments to image...");
     add_image_comments(&img, argc, argv, samples, max_iter);
-    fprintf(stderr, "done\n");
 
     render_orbits(&img, samples, max_iter);
 
-    fprintf(stderr, "writing image...");
     write_image(&img);
-    fprintf(stderr, "done\n");
 
-    fprintf(stderr, "freeing resources...");
     free(img.buffer);
     free(img.comment);
-    fprintf(stderr, "done\n");
 
     return 0;
 }

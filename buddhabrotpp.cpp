@@ -5,13 +5,6 @@
 #include "spinner.h"
 #include "common.h"
 
-inline std::complex<double> get_random_c(void)
-{
-    double rre = (double)rand() / RAND_MAX;
-    double rim = (double)rand() / RAND_MAX;
-    return std::complex<double>(rre * (X1 - X0) + X0, rim * (Y1 - Y0) + Y0);
-}
-
 void render_orbits(const struct image *img, int samples, int max_iter)
 {
     int *const buf = img->buffer;
@@ -26,7 +19,12 @@ void render_orbits(const struct image *img, int samples, int max_iter)
         if (samp_chunk > 0 && (n % samp_chunk == 0)) {
             update_spinner((double)n / samples);
         }
-        c = get_random_c();
+        {
+            double rre = (double)rand() / RAND_MAX;
+            double rim = (double)rand() / RAND_MAX;
+            c.real(rre * (X1 - X0) + X0);
+            c.imag(rim * (Y1 - Y0) + Y0);
+        }
         /* find out if z escapes to infinity for this c */
         z = 0.0;
         for (int i = 0; i < max_iter; i++) {
