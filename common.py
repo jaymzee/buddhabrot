@@ -15,7 +15,6 @@ def array_stats(arr, header):
 
 def load_array(filename):
     """read text file into numpy array"""
-    print("reading %s" % filename)
     arr = np.loadtxt(filename)
     array_stats(arr, "input file statistics:")
     return arr
