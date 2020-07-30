@@ -20,7 +20,12 @@ def main():
         print("Usage: mplshow filename [threshold [colormap]]")
         sys.exit(1)
 
-    init_arr = load_array(in_filename)
+    try:
+        init_arr = load_array(in_filename)
+    except IOError as err:
+        print(err)
+        sys.exit(1)
+
     clipped_arr = clip_array(init_arr, clip_threshold)
     rot_arr = np.fliplr(clipped_arr.T)  # rotate image right 90 degrees
 
