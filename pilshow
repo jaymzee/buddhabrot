@@ -41,7 +41,8 @@ def main():
         print(err)
         sys.exit(1)
 
-    arr = clip_array(arr, clip_threshold)
+    if clip_threshold:
+        arr = clip_array(arr, clip_threshold)
 
     # rescale to 255 levels of gray
     max_intensity = np.max(arr)
