@@ -111,7 +111,6 @@ int main(int argc, char *argv[])
 
     img.buffer = calloc(img.width * img.height, sizeof(*img.buffer));
     img.comment = malloc(4096); /* 4K is plenty of room for comments */
-    img.comment_size = 4096;
 
     add_image_comments(&img, argc, argv, samples, max_iter);
 

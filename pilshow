@@ -6,34 +6,52 @@ from PIL import Image
 from common import load_array, clip_array
 
 
+def print_usage():
+    print('Usage: pilshow [options] filename')
+    print('Options:')
+    print('    -t         transpose image')
+    print('    -m255      set upper bound on magnitude')
+
+
 def main():
+    in_filename = None
     clip_threshold = None
+    transpose = False
+
     # process command line arguments
-    if len(sys.argv) >= 2:
-        in_filename = sys.argv[1]
-        if len(sys.argv) >= 3:
-            clip_threshold = int(sys.argv[2])
-    else:
-        print("Usage: pilshow filename [threshold]")
+    for arg in sys.argv[1:]:
+        if arg[:2] == '-t':
+            transpose = True
+        elif arg[:2] == '-m':
+            clip_threshold = int(arg[2:])
+        elif arg[:1] != '-' and in_filename is None:
+            in_filename = arg
+        else:
+            print_usage()
+            sys.exit(1)
+
+    if in_filename is None:
+        print_usage()
         sys.exit(1)
 
+    # read and process input file
     try:
-        init_arr = load_array(in_filename)
+        arr = load_array(in_filename)
     except IOError as err:
         print(err)
         sys.exit(1)
 
-    clipped_arr = clip_array(init_arr, clip_threshold)
+    arr = clip_array(arr, clip_threshold)
 
     # rescale to 255 levels of gray
-    max_intensity = np.max(clipped_arr)
-    rescaled_arr = 255.0 * clipped_arr / max_intensity
+    max_intensity = np.max(arr)
+    arr = arr * 255.0 / max_intensity
 
-    # rotate image right 90 degrees
-    rot_arr = np.fliplr(rescaled_arr.T)
+    if transpose:
+        arr = arr.T
 
     # display image momentarily
-    img = Image.fromarray(rot_arr)
+    img = Image.fromarray(arr)
     img.show()
 
     # write PNG image

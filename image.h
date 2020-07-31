@@ -6,7 +6,6 @@ struct image {
     int width;
     int height;
     char *comment;
-    size_t comment_size;
 };
 
 #ifdef __cplusplus

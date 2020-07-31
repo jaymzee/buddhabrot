@@ -23,9 +23,6 @@ def load_array(filename):
 def clip_array(arr, threshold):
     """clip the image array at threshold"""
     # clip values
-    if threshold is None:
-        return arr
-
     print("clipping values abouve %d" % threshold)
     clipped_arr = np.minimum(arr, threshold)
     diff_arr = arr - clipped_arr

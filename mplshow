@@ -6,37 +6,60 @@ import matplotlib.pyplot as plt
 from common import load_array, clip_array
 
 
+def print_usage():
+    print('Usage: mplshow [options] filename')
+    print('Options:')
+    print('    -t         transpose image')
+    print('    -m255      set upper bound on magnitude')
+    print('    -cviridis  colormap to use')
+
+
 def main():
-    cmap = 'gray'
+    in_filename = None
+    transpose = False
     clip_threshold = None
+    colormap = 'gray'
+
     # process command line arguments
-    if len(sys.argv) >= 2:
-        in_filename = sys.argv[1]
-        if len(sys.argv) >= 3:
-            clip_threshold = int(sys.argv[2])
-            if len(sys.argv) >= 4:
-                cmap = sys.argv[3]
-    else:
-        print("Usage: mplshow filename [threshold [colormap]]")
+    for arg in sys.argv[1:]:
+        if arg[:2] == '-t':
+            transpose = True
+        elif arg[:2] == '-m':
+            clip_threshold = int(arg[2:])
+        elif arg[:2] == '-c':
+            colormap = arg[2:]
+        elif arg[:1] != '-' and in_filename is None:
+            in_filename = arg
+        else:
+            print_usage()
+            sys.exit(1)
+
+    if in_filename is None:
+        print_usage()
         sys.exit(1)
 
+    # read and process input file
     try:
-        init_arr = load_array(in_filename)
+        arr = load_array(in_filename)
     except IOError as err:
         print(err)
         sys.exit(1)
 
-    clipped_arr = clip_array(init_arr, clip_threshold)
-    rot_arr = np.fliplr(clipped_arr.T)  # rotate image right 90 degrees
+    if clip_threshold is not None:
+        arr = clip_array(arr, clip_threshold)
 
-    plt.imshow(rot_arr, cmap=cmap)
+    if transpose:
+        arr = np.fliplr(arr.T)
+
+    # show image
+    plt.imshow(arr, cmap=colormap)
     plt.show()
 
-    # write PNG image
+    # write image as PNG file
     out_basename, _ = os.path.splitext(in_filename)
     out_filename = out_basename + ".png"
     print("writing PNG image to %s" % out_filename)
-    plt.imsave(out_filename, rot_arr, cmap=cmap)
+    plt.imsave(out_filename, arr, cmap=colormap)
 
 
 if __name__ == "__main__":
