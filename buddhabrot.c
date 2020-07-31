@@ -1,31 +1,34 @@
 #include <stdlib.h>
 #include <complex.h>
+#include <stdint.h>
 #include "image.h"
 #include "spinner.h"
 #include "common.h"
 
-void render_orbits(const struct image *img, int samples, int max_iter)
+void render_orbits(const struct image *img, 
+                   const uint64_t samples, 
+                   const uint64_t max_iter)
 {
     int *const buf = img->buffer;
     const int w = img->width;
     const int h = img->height;
-    const int samp_chunk = samples / 1000;
+    const uint64_t samp_chunk = samples / 1000;
     double complex z, c;
 
     srand(SEED);    /* seed random number generator */
     init_spinner(SPINNER_STR);
-    for (int n = 0; n < samples; n++) {
+    for (uint64_t n = 0; n < samples; n++) {
         if (samp_chunk > 0 && (n % samp_chunk == 0)) {
             update_spinner((double)n / samples);
         }
         {
-            double rre = (double)rand() / RAND_MAX;
-            double rim = (double)rand() / RAND_MAX;
+            const double rre = (double)rand() / RAND_MAX;
+            const double rim = (double)rand() / RAND_MAX;
             c = (rre * (X1 - X0) + X0) + (rim * (Y1 - Y0) + Y0) * I;
         }
         /* find out if z escapes to infinity for this c */
         z = 0.0;
-        for (int i = 0; i < max_iter; i++) {
+        for (uint64_t i = 0; i < max_iter; i++) {
             z = z * z + c;
             if (cabs(z) > ESCAPE_MAG) {
                 /* this c escaped so reiterate the sequence
@@ -34,8 +37,8 @@ void render_orbits(const struct image *img, int samples, int max_iter)
                 while (cabs(z) <= ESCAPE_MAG) {
                     z = z * z + c;
                     /* map complex z back to image coordinates */
-                    int x = (int)((creal(z) - X0) / (X1 - X0) * w);
-                    int y = (int)((cimag(z) - Y0) / (Y1 - Y0) * h);
+                    const int x = (int)((creal(z) - X0) / (X1 - X0) * w);
+                    const int y = (int)((cimag(z) - Y0) / (Y1 - Y0) * h);
                     if (x >= 0 && x < w && y >= 0 && y < h) {
                         buf[y * w + x]++;
                     }

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <complex.h>
+#include <stdint.h>
 #include "common.h"
 #include "image.h"
 
@@ -22,7 +23,7 @@ double ESCAPE_MAG = 2.3;
 
 void add_image_comments(const struct image *img,
                         int argc, char *argv[],
-                        int samples, int max_iter)
+                        uint64_t samples, uint64_t max_iter)
 {
     char buf[80];
 
@@ -34,9 +35,9 @@ void add_image_comments(const struct image *img,
     sprintf(buf, "\n# size: %d x %d",
               img->width, img->height);
     strcat(img->comment, buf);
-    sprintf(buf, "\n# samples: %d", samples);
+    sprintf(buf, "\n# samples: %llu", (unsigned long long)samples);
     strcat(img->comment, buf);
-    sprintf(buf, "\n# max iterations: %d", max_iter);
+    sprintf(buf, "\n# max iterations: %llu", (unsigned long long)max_iter);
     strcat(img->comment, buf);
     sprintf(buf, "\n# seed: %d", SEED);
     strcat(img->comment, buf);
@@ -57,8 +58,8 @@ void arg_error(const char *msg)
 int main(int argc, char *argv[])
 {
     struct image img = { NULL, 16, 16, NULL };
-    int max_iter = 20;
-    int samples = 1000;
+    uint64_t max_iter = 20;
+    uint64_t samples = 1000;
 
     if (argc == 1) {
         fprintf(stderr, "Usage: %s [options]\n", argv[0]);
@@ -76,10 +77,10 @@ int main(int argc, char *argv[])
     /* process command line arguments */
     for (int i = 1; i < argc; i++) {
         if (strncmp("-i", argv[i], 2) == 0) {
-            max_iter = atoi(argv[i] + 2);
+            max_iter = strtoll(argv[i] + 2, NULL, 10);
         }
         if (strncmp("-s", argv[i], 2) == 0) {
-            samples = atoi(argv[i] + 2);
+            samples = strtoll(argv[i] + 2, NULL, 10);
         }
         if (strncmp("-w", argv[i], 2) == 0) {
             img.width = atoi(argv[i] + 2);

@@ -1,6 +1,7 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#include <stdint.h>
 #include "image.h"
 
 #define SEED 42
@@ -25,7 +26,9 @@ extern double Y0;    /* Y is the imaginary axis aligned vertically */
 extern double Y1;
 extern double ESCAPE_MAG;
 
-void render_orbits(const struct image *img, int samples, int max_iter);
+void render_orbits(const struct image *img, 
+                   uint64_t samples, 
+                   uint64_t max_iter);
 
 #ifdef __cplusplus
 }
