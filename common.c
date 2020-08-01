@@ -20,6 +20,7 @@ double X1 =  0.75;
 double Y0 = -1.50;
 double Y1 =  1.50;
 double ESCAPE_MAG = 2.3;
+const volatile char version[] = VERSION;
 
 void add_image_comments(const struct image *img,
                         int argc, char *argv[],
@@ -68,9 +69,10 @@ int main(int argc, char *argv[])
         fprintf(stderr, "    -s10000  number of sample points\n");
         fprintf(stderr, "    -w1000   width of image\n");
         fprintf(stderr, "    -h1000   height of image\n");
-        fprintf(stderr, "    -e2.3    %s\n", 
+        fprintf(stderr, "    -e2.3    %s\n",
                 "magnitude of z considered as escaping to infinity");
         fprintf(stderr, "    -r-1.7,-1.5,0.75,1.5   z coordinate range\n");
+        fprintf(stderr, "    -v       show version\n");
         exit(1);
     }
 
@@ -90,6 +92,10 @@ int main(int argc, char *argv[])
         }
         if (strncmp("-e", argv[i], 2) == 0) {
             ESCAPE_MAG = atof(argv[i] + 2);
+        }
+        if (strncmp("-v", argv[i], 2) == 0) {
+            fprintf(stderr, "%s version %s\n", argv[0], version);
+            exit(0);
         }
         if (strncmp("-r", argv[i], 2) == 0) {
             char buf[128], *p, *r[4], *next_token;

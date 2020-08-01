@@ -32,7 +32,10 @@ spinner.o: spinner.c
 	$(CC) $(CFLAGS) -c $<
 
 common.o: common.c
-	$(CC) $(CFLAGS) -c $<
+ifndef BUILD_VERSION
+	$(error environment variable BUILD_VERSION not set)
+endif
+	$(CC) $(CFLAGS) -DVERSION='"$(BUILD_VERSION)"' -c $<
 
 clean:
 	rm -f *.o $(OBJS)

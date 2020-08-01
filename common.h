@@ -25,9 +25,10 @@ extern double X1;
 extern double Y0;    /* Y is the imaginary axis aligned vertically */
 extern double Y1;
 extern double ESCAPE_MAG;
+extern const volatile char version[];
 
-void render_orbits(const struct image *img, 
-                   uint64_t samples, 
+void render_orbits(const struct image *img,
+                   uint64_t samples,
                    uint64_t max_iter);
 
 #ifdef __cplusplus
