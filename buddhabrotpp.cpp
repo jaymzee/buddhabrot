@@ -12,7 +12,7 @@ void render_orbits(const struct image *img,
     int *const buf = img->buffer;
     const int w = img->width;
     const int h = img->height;
-    const uint64_t samp_chunk = samples / 100;
+    const uint64_t samp_chunk = samples / 1000;
     std::complex<double> z, c;
 
     srand(RANDOM_SEED);
