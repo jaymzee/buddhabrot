@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
     struct image img = { NULL, 16, 16, NULL };
     uint64_t max_iter = 20;
     uint64_t samples = 1000;
-    char *fname = NULL;
+    const char *fname = NULL;
 
     /* extract basename of executable */
     if (argc > 0) {
@@ -142,6 +142,14 @@ int main(int argc, char *argv[])
     }
 
     /* allocate resources */
+    FILE *outfile = stdout;
+    if (fname) {
+        outfile = fopen(fname, "w");
+        if (!outfile) {
+            perror(fname);
+            exit(1);
+        }
+    }
     img.buffer = calloc(img.width * img.height, sizeof(*img.buffer));
     img.comment = malloc(4096); /* 4K is plenty of room for comments */
 
@@ -150,19 +158,12 @@ int main(int argc, char *argv[])
     render_orbits(&img, samples, max_iter);
 
     /* write image */
-    if (fname) {
-        FILE *fp = fopen(fname, "w");
-        if (fp) {
-            write_image(&img, fp);
-            fclose(fp);
-        } else {
-            perror("write image");
-        }
-    } else {
-        write_image(&img, stdout);
-    }
+    write_image(&img, outfile);
 
     /* cleanup */
+    if (fname) {
+        fclose(outfile);
+    }
     free(img.buffer);
     free(img.comment);
 
