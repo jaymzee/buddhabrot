@@ -10,4 +10,4 @@
 * better error handling of command line options
 * better compiler support for buddhabrot (C implementation)
 * *max iterations* and *samples* accept 64 bit integers
-* mplshow pilshow use -? style command line options
+* mplshow and pilshow use -? style command line options
