@@ -4,10 +4,10 @@
 ### features added:
 * -d random seed option
 * -v version option
-* provide output filename on cmdline (alternative to redirecting)
+* provide output filename directly (instead redirecting stdout)
 
 ### other changes:
-* better error handling of cmdline options
+* better error handling of command line options
 * better compiler support for buddhabrot (C implementation)
 * *max iterations* and *samples* accept 64 bit integers
 * mplshow pilshow use -? style command line options
