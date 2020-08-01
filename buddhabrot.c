@@ -14,7 +14,7 @@ void render_orbits(const struct image *img,
     const uint64_t samp_chunk = samples / 1000;
     double zr, zi, zr2, zi2, cr, ci;
 
-    srand(SEED);    /* seed random number generator */
+    srand(RANDOM_SEED);    /* seed random number generator */
     init_spinner(SPINNER_STR);
     for (uint64_t n = 0; n < samples; n++) {
         if (samp_chunk > 0 && (n % samp_chunk == 0)) {

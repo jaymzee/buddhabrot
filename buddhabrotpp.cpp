@@ -15,7 +15,7 @@ void render_orbits(const struct image *img,
     const uint64_t samp_chunk = samples / 100;
     std::complex<double> z, c;
 
-    srand(SEED);
+    srand(RANDOM_SEED);
     init_spinner(SPINNER_STR);
     for (uint64_t n = 0; n < samples; n++) {
         if (samp_chunk > 0 && (n % samp_chunk == 0)) {
