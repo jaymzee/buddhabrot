@@ -7,7 +7,7 @@ CXX = clang++
 CFLAGS = -O2 -D_CRT_SECURE_NO_WARNINGS -std=c99 -pedantic -Werror
 CXXFLAGS = -O2 -std=c++17 -pedantic -Werror
 LFLAGS = 
-OBJS = mandelbrot.exe buddhabrotpp.exe
+OBJS = mandelbrot.exe buddhabrot.exe buddhabrotpp.exe
 
 all: $(OBJS)
 

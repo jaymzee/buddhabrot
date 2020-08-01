@@ -1,5 +1,4 @@
 #include <stdlib.h>
-#include <complex.h>
 #include <stdint.h>
 #include "image.h"
 #include "spinner.h"
@@ -13,7 +12,7 @@ void render_orbits(const struct image *img,
     const int w = img->width;
     const int h = img->height;
     const uint64_t samp_chunk = samples / 1000;
-    double complex z, c;
+    double zr, zi, zr2, zi2, cr, ci;
 
     srand(SEED);    /* seed random number generator */
     init_spinner(SPINNER_STR);
@@ -22,23 +21,32 @@ void render_orbits(const struct image *img,
             update_spinner((double)n / samples);
         }
         {
-            const double rre = (double)rand() / RAND_MAX;
-            const double rim = (double)rand() / RAND_MAX;
-            c = (rre * (X1 - X0) + X0) + (rim * (Y1 - Y0) + Y0) * I;
+            const double rr = (double)rand() / RAND_MAX;
+            const double ri = (double)rand() / RAND_MAX;
+            cr = rr * (X1 - X0) + X0;
+            ci = ri * (Y1 - Y0) + Y0;
         }
         /* find out if z escapes to infinity for this c */
-        z = 0.0;
+        zr = zi = zr2 = zi2 = 0.0;
         for (uint64_t i = 0; i < max_iter; i++) {
-            z = z * z + c;
-            if (cabs(z) > ESCAPE_MAG) {
+            /* z = z * z + c */
+            zi = 2.0 * zr * zi + ci;
+            zr = zr2 - zi2 + cr;
+            zr2 = zr * zr;
+            zi2 = zi * zi;
+            if (zr2 + zi2 > ESCAPE_MAG * ESCAPE_MAG) {
                 /* this c escaped so reiterate the sequence
                    writing orbit to image this time */
-                z = 0.0;
-                while (cabs(z) <= ESCAPE_MAG) {
-                    z = z * z + c;
+                zr = zi = zr2 = zi2 = 0.0;
+                while (zr2 + zi2 <= ESCAPE_MAG * ESCAPE_MAG) {
+                    /* z = z * z + c */
+                    zi = 2.0 * zr * zi + ci;
+                    zr = zr2 - zi2 + cr;
+                    zr2 = zr * zr;
+                    zi2 = zi * zi;
                     /* map complex z back to image coordinates */
-                    const int x = (int)((creal(z) - X0) / (X1 - X0) * w);
-                    const int y = (int)((cimag(z) - Y0) / (Y1 - Y0) * h);
+                    const int x = (int)((zr - X0) / (X1 - X0) * w);
+                    const int y = (int)((zi - Y0) / (Y1 - Y0) * h);
                     if (x >= 0 && x < w && y >= 0 && y < h) {
                         buf[y * w + x]++;
                     }
