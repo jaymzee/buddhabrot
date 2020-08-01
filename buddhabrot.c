@@ -4,8 +4,8 @@
 #include "spinner.h"
 #include "common.h"
 
-void render_orbits(const struct image *img, 
-                   const uint64_t samples, 
+void render_orbits(const struct image *img,
+                   const uint64_t samples,
                    const uint64_t max_iter)
 {
     int *const buf = img->buffer;
