@@ -5,9 +5,9 @@
 CC = clang
 CXX = clang++
 CFLAGS = -O2 -D_CRT_SECURE_NO_WARNINGS -std=c99 -pedantic -Werror
-CXXFLAGS = -O2 -std=c++17 -pedantic -Werror
+CXXFLAGS = -O2 -D_CRT_SECURE_NO_WARNINGS -std=c++17 -pedantic -Werror
 LFLAGS = 
-OBJS = mandelbrot.exe buddhabrot.exe buddhabrotpp.exe
+OBJS = mandelbrot.exe buddhabrot.exe buddhabrotpp.exe buddhabrotmt.exe
 
 all: $(OBJS)
 
@@ -27,6 +27,12 @@ buddhabrotpp.exe: buddhabrotpp.o image.o spinner.o common.o
 	$(CXX) -o $@ $^ $(LFLAGS)
 
 buddhabrotpp.o: buddhabrotpp.cpp
+	$(CXX) $(CXXFLAGS) -c $<
+
+buddhabrotmt.exe: buddhabrotmt.o image.o common.o
+	$(CXX) -o $@ $^ $(LFLAGS)
+
+buddhabrotmt.o: buddhabrotmt.cpp
 	$(CXX) $(CXXFLAGS) -c $<
 
 image.o: image.c

@@ -70,7 +70,7 @@ void render_orbits(const struct image *final_img,
     char *comment = final_img->comment;
     const int width = final_img->width;
     const int height = final_img->height;
-    
+
     // get number of threads to use
     const char *threadsp = std::getenv("THREADS");
     if (!threadsp) {
@@ -78,6 +78,7 @@ void render_orbits(const struct image *final_img,
     }
     const int threads = atoi(threadsp);
     fprintf(stderr, "starting %d worker threads\n", threads);
+    fflush(stderr);
 
     // allocate images and threads
     thread *tsk = new thread[threads];
@@ -90,7 +91,7 @@ void render_orbits(const struct image *final_img,
         tsk[n] = thread(render_task, &img[n], samples / threads, 
                         max_iter, RANDOM_SEED + n);
     }
-    
+
     // wait for all threads to finish
     for (int n = 0; n < threads; n++) {
         tsk[n].join();
