@@ -25,8 +25,9 @@ extern double Y0;    /* Y is the imaginary axis aligned vertically */
 extern double Y1;
 extern double ESCAPE_MAG;
 extern uint32_t RANDOM_SEED;
-extern const volatile char g_version[];
-extern char g_execname[];
+extern int THREADS;
+extern const volatile char VERSION_STR[];
+extern char EXEC_NAME[];
 
 void render_orbits(const struct image *img,
                    uint64_t samples,

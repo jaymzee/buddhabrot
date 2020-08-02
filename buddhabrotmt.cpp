@@ -3,6 +3,7 @@
 #include <cstdint>
 #include "image.h"
 #include "common.h"
+#include "myrandom.h"
 
 void render_task(const image *img,
                  const uint64_t samples,
@@ -14,19 +15,12 @@ void render_task(const image *img,
     const int h = img->height;
     double zr, zi, zr2, zi2, cr, ci;
 
-#ifdef _WIN32
-    srand(seed);    /* seed random number generator */
-#endif
+    init_random(seed);
 
     for (uint64_t n = 0; n < samples; n++) {
         {
-#ifdef _WIN32
-            const double rr = (double)rand() / RAND_MAX;
-            const double ri = (double)rand() / RAND_MAX;
-#else
-            const double rr = (double)rand_r(&seed) / RAND_MAX;
-            const double ri = (double)rand_r(&seed) / RAND_MAX;
-#endif
+            const double rr = (double)get_random(&seed) / RAND_MAX;
+            const double ri = (double)get_random(&seed) / RAND_MAX;
             cr = rr * (X1 - X0) + X0;
             ci = ri * (Y1 - Y0) + Y0;
         }
@@ -70,13 +64,8 @@ void render_orbits(const struct image *final_img,
     char *comment = final_img->comment;
     const int width = final_img->width;
     const int height = final_img->height;
+    const int threads = THREADS;
 
-    // get number of threads to use
-    const char *threadsp = std::getenv("THREADS");
-    if (!threadsp) {
-        threadsp = "2";
-    }
-    const int threads = atoi(threadsp);
     fprintf(stderr, "starting %d worker threads\n", threads);
     fflush(stderr);
 

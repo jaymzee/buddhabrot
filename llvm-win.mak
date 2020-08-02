@@ -29,7 +29,7 @@ buddhabrotpp.exe: buddhabrotpp.o image.o spinner.o common.o
 buddhabrotpp.o: buddhabrotpp.cpp
 	$(CXX) $(CXXFLAGS) -c $<
 
-buddhabrotmt.exe: buddhabrotmt.o image.o common.o
+buddhabrotmt.exe: buddhabrotmt.o myrandom.o image.o common.o
 	$(CXX) -o $@ $^ $(LFLAGS)
 
 buddhabrotmt.o: buddhabrotmt.cpp

@@ -25,11 +25,14 @@ buddhabrotpp: buddhabrotpp.o image.o spinner.o common.o
 buddhabrotpp.o: buddhabrotpp.cpp
 	$(CXX) $(CXXFLAGS) -c $<
 
-buddhabrotmt: buddhabrotmt.o image.o common.o
+buddhabrotmt: buddhabrotmt.o myrandom.o image.o common.o
 	$(CXX) -o $@ $^ $(LFLAGS) -pthread
 
 buddhabrotmt.o: buddhabrotmt.cpp
 	$(CXX) $(CXXFLAGS) -pthread -c $<
+
+myrandom.o: myrandom.c
+	$(CC) $(CFLAGS) -c $<
 
 image.o: image.c
 	$(CC) $(CFLAGS) -c $<

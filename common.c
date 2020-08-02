@@ -24,8 +24,11 @@ double Y0 = -1.50;
 double Y1 =  1.50;
 double ESCAPE_MAG = 2.3;
 uint32_t RANDOM_SEED = 42;
-const volatile char g_version[] = VERSION;  /* baked in during build */
-char g_execname[256] = "buddhabrot";  /* executable filename */
+int THREADS = 1;    /* Number of worker threads */
+/* version baked in during build */
+const volatile char VERSION_STR[] = VERSION;
+/* executable filename */
+char EXEC_NAME[256] = "buddhabrot";  
 
 void add_image_comments(const struct image *img,
                         int argc, char *argv[],
@@ -34,7 +37,7 @@ void add_image_comments(const struct image *img,
     char buf[80];
 
     strcpy(img->comment, "# cmdline: ");
-    strcat(img->comment, g_execname);
+    strcat(img->comment, EXEC_NAME);
     for (int i = 1; i < argc; i++) {
         sprintf(buf, " %s", argv[i]);
         strcat(img->comment, buf);
@@ -57,7 +60,7 @@ void add_image_comments(const struct image *img,
 
 void show_usage(void)
 {
-    fprintf(stderr, "Usage: %s [options] [filename]\n", g_execname);
+    fprintf(stderr, "Usage: %s [options] [filename]\n", EXEC_NAME);
     fprintf(stderr, "options:\n");
     fprintf(stderr, "    -i100    maximum number of iterations\n");
     fprintf(stderr, "    -s10000  number of sample points\n");
@@ -67,6 +70,7 @@ void show_usage(void)
     fprintf(stderr, "    -e2.3    %s\n",
             "magnitude of z considered as escaping to infinity");
     fprintf(stderr, "    -r-1.7,-1.5,0.75,1.5   z coordinate range\n");
+    fprintf(stderr, "    -t       number of worker threads\n");
     fprintf(stderr, "    -v       show version\n");
     exit(1);
 }
@@ -81,11 +85,11 @@ int main(int argc, char *argv[])
     /* extract basename of executable */
     if (argc > 0) {
 #ifdef __unix__
-        strcpy(g_execname, basename(argv[0]));
+        strcpy(EXEC_NAME, basename(argv[0]));
 #elif defined(_WIN32)
-        _splitpath(argv[0], NULL, NULL, g_execname, NULL);
+        _splitpath(argv[0], NULL, NULL, EXEC_NAME, NULL);
 #else
-        strcpy(g_execname, argv[0]);
+        strcpy(EXEC_NAME, argv[0]);
 #endif
     }
 
@@ -109,6 +113,8 @@ int main(int argc, char *argv[])
             ESCAPE_MAG = atof(argv[i] + 2);
         } else if (strncmp("-d", argv[i], 2) == 0) {
             RANDOM_SEED = atoi(argv[i] + 2);
+        } else if (strncmp("-t", argv[i], 2) == 0) {
+            THREADS = atoi(argv[i] + 2);
         } else if (strncmp("-r", argv[i], 2) == 0) {
             char buf[128], *p, *r[4], *next_token;
             strncpy(buf, argv[i] + 2, sizeof(buf));
@@ -128,7 +134,7 @@ int main(int argc, char *argv[])
             X1 = atof(r[2]);
             Y1 = atof(r[3]);
         } else if (strncmp("-v", argv[i], 2) == 0) {
-            fprintf(stderr, "%s version %s\n", g_execname, g_version);
+            fprintf(stderr, "%s version %s\n", EXEC_NAME, VERSION_STR);
             exit(0);
         } else if (argv[i][0] == '-') {
             fprintf(stderr, "unknown option %s\n", argv[i]);
