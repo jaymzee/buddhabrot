@@ -3,7 +3,7 @@ CXX = g++
 CFLAGS = -O2 -std=c99 -pedantic -Werror
 CXXFLAGS = -O2 -std=c++17 -pedantic -Werror
 LFLAGS = -lm
-OBJS = mandelbrot buddhabrot buddhabrotpp
+OBJS = mandelbrot buddhabrot buddhabrotpp buddhabrotmt
 
 all: $(OBJS)
 
@@ -24,6 +24,12 @@ buddhabrotpp: buddhabrotpp.o image.o spinner.o common.o
 
 buddhabrotpp.o: buddhabrotpp.cpp
 	$(CXX) $(CXXFLAGS) -c $<
+
+buddhabrotmt: buddhabrotmt.o image.o common.o
+	$(CXX) -o $@ $^ $(LFLAGS) -pthread
+
+buddhabrotmt.o: buddhabrotmt.cpp
+	$(CXX) $(CXXFLAGS) -pthread -c $<
 
 image.o: image.c
 	$(CC) $(CFLAGS) -c $<

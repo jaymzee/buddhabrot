@@ -7,7 +7,9 @@ void write_image(const struct image *img, FILE *fp)
     const int w = img->width;
     const int h = img->height;
 
-    fprintf(fp, "%s\n",  img->comment);
+    if (img->comment) {
+        fprintf(fp, "%s\n",  img->comment);
+    }
     fprintf(fp, "# image size: %d x %d \n", w, h);
     for (int y = 0; y < h; y++) {
         for (int x = 0; x < w; x++) {
