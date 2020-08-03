@@ -1,4 +1,12 @@
 #!/usr/bin/env python
+
+"""
+mplshow converts a text file to a PNG image using matplotlib library
+
+use this for generating images with various colormaps and
+for displaying with matplotlib.pyplot
+"""
+
 import sys
 import os
 import numpy as np

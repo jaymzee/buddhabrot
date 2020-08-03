@@ -1,4 +1,12 @@
 #!/usr/bin/env python
+
+"""
+pilshow converts a text file to a PNG image using the Pillow library
+
+use this for generating grayscale images and
+for displaying with the default image viewer
+"""
+
 import sys
 import os
 import numpy as np
