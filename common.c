@@ -70,9 +70,8 @@ void show_usage(void)
     fprintf(stderr, "    -e2.3    %s\n",
             "magnitude of z considered as escaping to infinity");
     fprintf(stderr, "    -r-1.7,-1.5,0.75,1.5   z coordinate range\n");
-    fprintf(stderr, "    -t       number of worker threads\n");
+    fprintf(stderr, "    -t2      number of worker threads\n");
     fprintf(stderr, "    -v       show version\n");
-    exit(1);
 }
 
 int main(int argc, char *argv[])
