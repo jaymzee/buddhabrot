@@ -8,10 +8,10 @@ for displaying with the default image viewer
 """
 
 import sys
-import os
 import numpy as np
 from PIL import Image
 from MyImage.arrayutils import load_array, clip_array
+from MyImage.fileutils import change_extension
 
 
 def print_usage():
@@ -64,8 +64,7 @@ def main():
     img.show()
 
     # write PNG image
-    out_basename, _ = os.path.splitext(in_filename)
-    out_filename = out_basename + ".png"
+    out_filename = change_extension(in_filename, "png")
     print("writing PNG image to %s" % out_filename)
     img_lum = img.convert("L")
     img_lum.save(out_filename)

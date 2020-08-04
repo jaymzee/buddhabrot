@@ -8,10 +8,10 @@ for displaying with matplotlib.pyplot
 """
 
 import sys
-import os
 import numpy as np
 import matplotlib.pyplot as plt
 from MyImage.arrayutils import load_array, clip_array
+from MyImage.fileutils import change_extension
 
 
 def print_usage():
@@ -64,8 +64,7 @@ def main():
     plt.show()
 
     # write image as PNG file
-    out_basename, _ = os.path.splitext(in_filename)
-    out_filename = out_basename + ".png"
+    out_filename = change_extension(in_filename, "png")
     print("writing PNG image to %s" % out_filename)
     plt.imsave(out_filename, arr, cmap=colormap)
 
