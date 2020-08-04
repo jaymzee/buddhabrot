@@ -10,8 +10,8 @@ for displaying with matplotlib.pyplot
 import sys
 import numpy as np
 import matplotlib.pyplot as plt
-from MyImage.arrayutils import load_array, clip_array
-from MyImage.fileutils import change_extension
+from show.arrayutils import load_array, clip_array
+from show.fileutils import change_extension
 
 
 def print_usage():

@@ -10,8 +10,8 @@ for displaying with the default image viewer
 import sys
 import numpy as np
 from PIL import Image
-from MyImage.arrayutils import load_array, clip_array
-from MyImage.fileutils import change_extension
+from show.arrayutils import load_array, clip_array
+from show.fileutils import change_extension
 
 
 def print_usage():
