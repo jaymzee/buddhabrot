@@ -4,48 +4,47 @@
 
 CC = clang
 CXX = clang++
-CFLAGS = -O2 -D_CRT_SECURE_NO_WARNINGS -std=c99 -pedantic -Werror
-CXXFLAGS = -O2 -D_CRT_SECURE_NO_WARNINGS -std=c++17 -pedantic -Werror
-LFLAGS = 
-TARGETS = mandelbrot.exe buddhabrot.exe buddhabrotpp.exe buddhabrotmt.exe
+CFLAGS = -O2 -std=c99 -pedantic -Werror -D_CRT_SECURE_NO_WARNINGS
+CXXFLAGS = -O2 -std=c++17 -pedantic -Werror -D_CRT_SECURE_NO_WARNINGS
+LFLAGS =
+TARGETS = $(addsuffix .exe, mandelbrot buddhabrot buddhabrotpp buddhabrotmt)
 
 all: $(TARGETS)
 
-mandelbrot.exe: obj/mandelbrot.o
+mandelbrot.exe: $(addprefix obj/, mandelbrot.o)
 	$(CC) -o $@ $^ $(LFLAGS)
 
-obj/mandelbrot.o: src/mandelbrot.c
+obj/mandelbrot.o: $(addprefix src/, mandelbrot.c)
 	$(CC) -o $@ $(CFLAGS) -c $<
 
-buddhabrot.exe: obj/buddhabrot.o obj/image.o obj/spinner.o obj/common.o
+buddhabrot.exe: $(addprefix obj/, buddhabrot.o image.o spinner.o common.o)
 	$(CC) -o $@ $^ $(LFLAGS)
 
-obj/buddhabrot.o: src/buddhabrot.c
+obj/buddhabrot.o: $(addprefix src/, buddhabrot.c image.h spinner.h common.h)
 	$(CC) -o $@ $(CFLAGS) -c $<
 
-buddhabrotpp.exe: obj/buddhabrotpp.o obj/image.o obj/spinner.o obj/common.o
+buddhabrotpp.exe: $(addprefix obj/, buddhabrotpp.o image.o spinner.o common.o)
 	$(CXX) -o $@ $^ $(LFLAGS)
 
-obj/buddhabrotpp.o: src/buddhabrotpp.cpp
+obj/buddhabrotpp.o: $(addprefix src/, buddhabrotpp.cpp image.h spinner.h common.h)
 	$(CXX) -o $@ $(CXXFLAGS) -c $<
 
-buddhabrotmt.exe: obj/buddhabrotmt.o obj/spinner.o obj/myrandom.o \
-		  obj/image.o obj/common.o
-	$(CXX) -o $@ $^ $(LFLAGS)
+buddhabrotmt.exe: $(addprefix obj/, buddhabrotmt.o myrandom.o image.o spinner.o common.o)
+	$(CXX) -o $@ $^ $(LFLAGS) -pthread
 
-obj/buddhabrotmt.o: src/buddhabrotmt.cpp
-	$(CXX) -o $@ $(CXXFLAGS) -c $<
+obj/buddhabrotmt.o: $(addprefix src/, buddhabrotmt.cpp myrandom.h image.h spinner.h common.h)
+	$(CXX) -o $@ $(CXXFLAGS) -pthread -c $<
 
-obj/myrandom.o: src/myrandom.c
+obj/myrandom.o: $(addprefix src/, myrandom.c myrandom.h)
 	$(CC) -o $@ $(CFLAGS) -c $<
 
-obj/image.o: src/image.c
+obj/image.o: $(addprefix src/, image.c image.h)
 	$(CC) -o $@ $(CFLAGS) -c $<
 
-obj/spinner.o: src/spinner.c
+obj/spinner.o: $(addprefix src/, spinner.c spinner.h)
 	$(CC) -o $@ $(CFLAGS) -c $<
 
-obj/common.o: src/common.c
+obj/common.o: $(addprefix src/, common.c common.h image.h)
 ifndef BUILD_VERSION
 	$(error environment variable BUILD_VERSION not set)
 endif
