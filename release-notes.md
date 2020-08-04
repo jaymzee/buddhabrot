@@ -1,3 +1,10 @@
+# Release notes 1.2.0
+## changes since 1.1.0
+
+### features added:
+* **buddhabrotmt** multithreaded implementation
+* -t number of worker threads option
+
 # Release notes 1.1.0
 ## changes since 1.0.0
 
