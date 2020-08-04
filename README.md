@@ -8,7 +8,7 @@
 **pilshow**         display and save grayscale PNG image from rendered image
                     data (Python 3, numpy, Pillow)  
 
-![buddhabrot image](doc/img/bb-i100k-s100M.png)
+![buddhabrot image](doc/img/bb-i100k-s10M.png)
 
 #### render buddhabrot image and save as intermediate file format
 ```
