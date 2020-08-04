@@ -22,13 +22,16 @@ obj/buddhabrot.o: $(addprefix src/, buddhabrot.c image.h spinner.h common.h)
 buddhabrotpp: $(addprefix obj/, buddhabrotpp.o image.o spinner.o common.o)
 	$(CXX) -o $@ $^ $(LFLAGS)
 
-obj/buddhabrotpp.o: $(addprefix src/, buddhabrotpp.cpp image.h spinner.h common.h)
+obj/buddhabrotpp.o: $(addprefix src/, buddhabrotpp.cpp \
+		      image.h spinner.h common.h)
 	$(CXX) -o $@ $(CXXFLAGS) -c $<
 
-buddhabrotmt: $(addprefix obj/, buddhabrotmt.o myrandom.o image.o spinner.o common.o)
+buddhabrotmt: $(addprefix obj/, buddhabrotmt.o \
+		myrandom.o image.o spinner.o common.o)
 	$(CXX) -o $@ $^ $(LFLAGS) -pthread
 
-obj/buddhabrotmt.o: $(addprefix src/, buddhabrotmt.cpp myrandom.h image.h spinner.h common.h)
+obj/buddhabrotmt.o: $(addprefix src/, buddhabrotmt.cpp \
+		      myrandom.h image.h spinner.h common.h)
 	$(CXX) -o $@ $(CXXFLAGS) -pthread -c $<
 
 obj/myrandom.o: $(addprefix src/, myrandom.c myrandom.h)
