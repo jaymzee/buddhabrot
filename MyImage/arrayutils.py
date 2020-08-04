@@ -1,6 +1,5 @@
 import numpy as np
 
-
 def array_stats(arr, header):
     """print statistics of the numpy array"""
     if header:
@@ -31,3 +30,6 @@ def clip_array(arr, threshold):
           (diff_count, 100.0 * diff_count / diff_arr.size))
     array_stats(clipped_arr, "statistics after clipping:")
     return clipped_arr
+
+
+

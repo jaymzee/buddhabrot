@@ -11,7 +11,7 @@ import sys
 import os
 import numpy as np
 from PIL import Image
-from common import load_array, clip_array
+from MyImage.arrayutils import load_array, clip_array
 
 
 def print_usage():
