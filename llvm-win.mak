@@ -7,47 +7,46 @@ CXX = clang++
 CFLAGS = -O2 -D_CRT_SECURE_NO_WARNINGS -std=c99 -pedantic -Werror
 CXXFLAGS = -O2 -D_CRT_SECURE_NO_WARNINGS -std=c++17 -pedantic -Werror
 LFLAGS = 
-OBJS = mandelbrot.o buddhabrot.o buddhabrotpp.o buddhabrotmt.o \
-       common.o image.o myrandom.o spinner.o
 TARGETS = mandelbrot.exe buddhabrot.exe buddhabrotpp.exe buddhabrotmt.exe
 
 all: $(TARGETS)
 
-mandelbrot.exe: mandelbrot.o
+mandelbrot.exe: obj/mandelbrot.o
 	$(CC) -o $@ $^ $(LFLAGS)
 
-mandelbrot.o: mandelbrot.c
+obj/mandelbrot.o: src/mandelbrot.c
 	$(CC) $(CFLAGS) -c $<
 
-buddhabrot.exe: buddhabrot.o image.o spinner.o common.o
+buddhabrot.exe: obj/buddhabrot.o obj/image.o obj/spinner.o obj/common.o
 	$(CC) -o $@ $^ $(LFLAGS)
 
-buddhabrot.o: buddhabrot.c
+obj/buddhabrot.o: src/buddhabrot.c
 	$(CC) $(CFLAGS) -c $<
 
-buddhabrotpp.exe: buddhabrotpp.o image.o spinner.o common.o
+buddhabrotpp.exe: obj/buddhabrotpp.o obj/image.o obj/spinner.o obj/common.o
 	$(CXX) -o $@ $^ $(LFLAGS)
 
-buddhabrotpp.o: buddhabrotpp.cpp
+obj/buddhabrotpp.o: src/buddhabrotpp.cpp
 	$(CXX) $(CXXFLAGS) -c $<
 
-buddhabrotmt.exe: buddhabrotmt.o spinner.o myrandom.o image.o common.o
+buddhabrotmt.exe: obj/buddhabrotmt.o obj/spinner.o obj/myrandom.o obj/image.o obj/common.o
 	$(CXX) -o $@ $^ $(LFLAGS)
 
-buddhabrotmt.o: buddhabrotmt.cpp
+obj/buddhabrotmt.o: src/buddhabrotmt.cpp
 	$(CXX) $(CXXFLAGS) -c $<
 
-image.o: image.c
+obj/image.o: src/image.c
 	$(CC) $(CFLAGS) -c $<
 
-spinner.o: spinner.c
+obj/spinner.o: src/spinner.c
 	$(CC) $(CFLAGS) -c $<
 
-common.o: common.c
+obj/common.o: src/common.c
 ifndef BUILD_VERSION
 	$(error environment variable BUILD_VERSION not set)
 endif
 	$(CC) $(CFLAGS) -DVERSION='"$(BUILD_VERSION)"' -c $<
 
 clean:
-	rm -f $(OBJS) $(TARGETS)
+	rm -f obj/*.o
+	rm -f $(TARGETS)

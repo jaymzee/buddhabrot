@@ -3,51 +3,49 @@ CXX = g++
 CFLAGS = -O2 -std=c99 -pedantic -Werror
 CXXFLAGS = -O2 -std=c++17 -pedantic -Werror
 LFLAGS = -lm
-OBJS = mandelbrot.o buddhabrot.o buddhabrotpp.o buddhabrotmt.o \
-       common.o image.o myrandom.o spinner.o
 TARGETS = mandelbrot buddhabrot buddhabrotpp buddhabrotmt
 
 all: $(TARGETS)
 
-mandelbrot: mandelbrot.o
+mandelbrot: obj/mandelbrot.o
 	$(CC) -o $@ $^ $(LFLAGS)
 
-mandelbrot.o: mandelbrot.c
-	$(CC) $(CFLAGS) -c $<
+obj/mandelbrot.o: src/mandelbrot.c
+	$(CC) -o $@ $(CFLAGS) -c $<
 
-buddhabrot: buddhabrot.o image.o spinner.o common.o
+buddhabrot: obj/buddhabrot.o obj/image.o obj/spinner.o obj/common.o
 	$(CC) -o $@ $^ $(LFLAGS)
 
-buddhabrot.o: buddhabrot.c
-	$(CC) $(CFLAGS) -c $<
+obj/buddhabrot.o: src/buddhabrot.c
+	$(CC) -o $@ $(CFLAGS) -c $<
 
-buddhabrotpp: buddhabrotpp.o image.o spinner.o common.o
+buddhabrotpp: obj/buddhabrotpp.o obj/image.o obj/spinner.o obj/common.o
 	$(CXX) -o $@ $^ $(LFLAGS)
 
-buddhabrotpp.o: buddhabrotpp.cpp
-	$(CXX) $(CXXFLAGS) -c $<
+obj/buddhabrotpp.o: src/buddhabrotpp.cpp
+	$(CXX) -o $@ $(CXXFLAGS) -c $<
 
-buddhabrotmt: buddhabrotmt.o spinner.o myrandom.o image.o common.o
+buddhabrotmt: obj/buddhabrotmt.o obj/spinner.o obj/myrandom.o obj/image.o obj/common.o
 	$(CXX) -o $@ $^ $(LFLAGS) -pthread
 
-buddhabrotmt.o: buddhabrotmt.cpp
-	$(CXX) $(CXXFLAGS) -pthread -c $<
+obj/buddhabrotmt.o: src/buddhabrotmt.cpp
+	$(CXX) -o $@ $(CXXFLAGS) -pthread -c $<
 
-myrandom.o: myrandom.c
-	$(CC) $(CFLAGS) -c $<
+obj/myrandom.o: src/myrandom.c
+	$(CC) -o $@ $(CFLAGS) -c $<
 
-image.o: image.c
-	$(CC) $(CFLAGS) -c $<
+obj/image.o: src/image.c
+	$(CC) -o $@ $(CFLAGS) -c $<
 
-spinner.o: spinner.c
-	$(CC) $(CFLAGS) -c $<
+obj/spinner.o: src/spinner.c
+	$(CC) -o $@ $(CFLAGS) -c $<
 
-common.o: common.c
+obj/common.o: src/common.c
 ifndef BUILD_VERSION
 	$(error environment variable BUILD_VERSION not set)
 endif
-	$(CC) $(CFLAGS) -DVERSION='"$(BUILD_VERSION)"' -c $<
+	$(CC) -o $@ $(CFLAGS) -DVERSION='"$(BUILD_VERSION)"' -c $<
 
 clean:
-	rm -f $(OBJS)
+	rm -f obj/*.o
 	rm -f $(TARGETS)
