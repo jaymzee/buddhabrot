@@ -1,4 +1,5 @@
 #include <cstdint>
+#include <cstdio>
 #include <cstdlib>
 #include <chrono>
 #include <thread>
@@ -8,6 +9,7 @@
 #include "myrandom.h"
 #include "spinner.h"
 
+/* task run per thread */
 void render_task(const image& img,
                  uint64_t samples,
                  uint64_t max_iter,
@@ -60,6 +62,7 @@ void render_task(const image& img,
     }
 }
 
+/* render buddhabrot (multithreaded implementation) */
 void render_orbits(const struct image *final_img,
                    const uint64_t samples,
                    const uint64_t max_iter)
@@ -73,9 +76,8 @@ void render_orbits(const struct image *final_img,
     vector<thread> threads(THREADS);
     vector<image> render_image(THREADS, *final_img);
     vector<uint64_t> render_progress(THREADS);
-
-    fprintf(stderr, "rendering with %zu threads\n", threads.size());
-    fflush(stderr);
+    char spinner_str[128];
+    sprintf(spinner_str, "%s with %d threads", SPINNER_STR, THREADS);
 
     // start worker threads
     for (int n = 0; n < THREADS; n++) {
@@ -91,7 +93,7 @@ void render_orbits(const struct image *final_img,
     }
 
     // main thread shows spinner while waiting for worker threads to finish
-    init_spinner(SPINNER_STR);
+    init_spinner(spinner_str);
     for (uint64_t total; total < samples_per_thread * THREADS;) {
         total = 0;
         for (auto subtotal : render_progress) {
@@ -100,7 +102,7 @@ void render_orbits(const struct image *final_img,
         update_spinner((double)total / samples);
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
-    finish_spinner(SPINNER_STR);
+    finish_spinner(spinner_str);
 
     // wait for all threads to finish
     for (thread& thread : threads) {
@@ -118,5 +120,4 @@ void render_orbits(const struct image *final_img,
         // free image.buffer
         delete[] img.buffer;
     }
-    fprintf(stderr, "rendering complete\n");
 }

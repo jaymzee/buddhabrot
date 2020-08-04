@@ -4,6 +4,7 @@
 #include "spinner.h"
 #include "common.h"
 
+/* render buddhabrot (c implementation) */
 void render_orbits(const struct image *img,
                    const uint64_t samples,
                    const uint64_t max_iter)

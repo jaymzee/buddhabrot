@@ -24,7 +24,7 @@ double Y0 = -1.3;
 double Y1 =  1.3;
 double ESCAPE_MAG = 2.2;
 uint32_t RANDOM_SEED = 42;
-int THREADS = 1;    /* Number of worker threads */
+int THREADS = 2;    /* Number of worker threads */
 /* version baked in during build */
 const volatile char VERSION_STR[] = VERSION;
 /* executable filename */

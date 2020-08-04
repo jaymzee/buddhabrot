@@ -5,6 +5,7 @@
 #include "spinner.h"
 #include "common.h"
 
+/* render buddhabrot (using c++ complex type) */
 void render_orbits(const struct image *img,
                    const uint64_t samples,
                    const uint64_t max_iter)
