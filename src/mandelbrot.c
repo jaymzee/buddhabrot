@@ -8,10 +8,10 @@ enum output output_type = ASCII;
 int  MAX_ITER = 256;
 int  RES_X = 61;
 int  RES_Y = 21;
-double X0 = -2.0;
-double X1 = 1.0;
-double Y0 = -1.25;
-double Y1 = 1.25;
+double X0 = -1.7;
+double X1 =  0.9;
+double Y0 = -1.3;
+double Y1 =  1.3;
 
 void arg_error(char *msg) {
     fputs(msg, stderr);

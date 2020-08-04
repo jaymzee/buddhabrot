@@ -14,15 +14,15 @@
                 the region to render
    ESCAPE_MAG   for a conventional mandelbrot rendering is usually 2.0
                 (magnitudes greater than this always escape to infinity)
-                for the buddhabrot method, using a value of 2.3 with the
+                for the buddhabrot method, using a value of 2.2 with the
                 coordinates below avoids a harsh circle near the edge.
 */
 
-double X0 = -1.70;
-double X1 =  0.75;
-double Y0 = -1.50;
-double Y1 =  1.50;
-double ESCAPE_MAG = 2.3;
+double X0 = -1.7;
+double X1 =  0.9;
+double Y0 = -1.3;
+double Y1 =  1.3;
+double ESCAPE_MAG = 2.2;
 uint32_t RANDOM_SEED = 42;
 int THREADS = 1;    /* Number of worker threads */
 /* version baked in during build */
@@ -67,9 +67,9 @@ void show_usage(void)
     fprintf(stderr, "    -d42     random seed\n");
     fprintf(stderr, "    -w1000   width of image\n");
     fprintf(stderr, "    -h1000   height of image\n");
-    fprintf(stderr, "    -e2.3    %s\n",
+    fprintf(stderr, "    -e2.2    %s\n",
             "magnitude of z considered as escaping to infinity");
-    fprintf(stderr, "    -r-1.7,-1.5,0.75,1.5   z coordinate range\n");
+    fprintf(stderr, "    -r-1.7,-1.3,0.9,1.3   z coordinate range\n");
     fprintf(stderr, "    -t2      number of worker threads\n");
     fprintf(stderr, "    -v       show version\n");
 }
