@@ -74,7 +74,7 @@ void render_orbits(const struct image *final_img,
     vector<image> render_image(THREADS, *final_img);
     vector<uint64_t> render_progress(THREADS);
 
-    fprintf(stderr, "starting %zu worker threads\n", threads.size());
+    fprintf(stderr, "rendering with %zu threads\n", threads.size());
     fflush(stderr);
 
     // start worker threads
@@ -92,7 +92,7 @@ void render_orbits(const struct image *final_img,
 
     // main thread shows spinner while waiting for worker threads to finish
     init_spinner(SPINNER_STR);
-    for (uint64_t total; total < samples;) {
+    for (uint64_t total; total < samples_per_thread * THREADS;) {
         total = 0;
         for (auto subtotal : render_progress) {
             total += subtotal;
@@ -118,4 +118,5 @@ void render_orbits(const struct image *final_img,
         // free image.buffer
         delete[] img.buffer;
     }
+    fprintf(stderr, "rendering complete\n");
 }
