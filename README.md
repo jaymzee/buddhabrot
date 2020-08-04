@@ -5,7 +5,7 @@
 **buddhabrotmt**    render buddhabrot (multithreaded implementation, fastest)  
 **mplshow**         display and save color PNG image from rendered image data
                     (Python 3, numpy, Matplotlib.pyplot)  
-**pilshow**         display and save grayscale PNG image from rendered image..
+**pilshow**         display and save grayscale PNG image from rendered image
                     data (Python 3, numpy, Pillow)  
 
 ![buddhabrot image](doc/img/bb-i100k-s100M.png)
