@@ -1,3 +1,9 @@
+
+# Release notes 1.2.1
+## changes since 1.2.0
+* fixed bug that could cause buddhabrotmt to wait indefinately for threads
+  to finish if samples was not evenly divisible by the number of threads
+
 # Release notes 1.2.0
 ## changes since 1.1.0
 
