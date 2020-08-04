@@ -1,23 +1,28 @@
-#include <thread>
-#include <cstdlib>
 #include <cstdint>
-#include "image.h"
+#include <cstdlib>
+#include <chrono>
+#include <thread>
+#include <vector>
 #include "common.h"
+#include "image.h"
 #include "myrandom.h"
+#include "spinner.h"
 
-void render_task(const image *img,
-                 const uint64_t samples,
-                 const uint64_t max_iter,
-                 uint32_t seed)
+void render_task(const image& img,
+                 uint64_t samples,
+                 uint64_t max_iter,
+                 uint32_t seed,
+                 uint64_t* progress)
 {
-    int *const buf = img->buffer;
-    const int w = img->width;
-    const int h = img->height;
+    int *const buf = img.buffer;
+    const int w = img.width;
+    const int h = img.height;
     double zr, zi, zr2, zi2, cr, ci;
 
     init_random(seed);
 
     for (uint64_t n = 0; n < samples; n++) {
+        *progress = n + 1;
         {
             const double rr = (double)get_random(&seed) / RAND_MAX;
             const double ri = (double)get_random(&seed) / RAND_MAX;
@@ -49,7 +54,7 @@ void render_task(const image *img,
                         buf[y * w + x]++;
                     }
                 }
-                break;
+                break; // break from for loop
             }
         }
     }
@@ -60,48 +65,57 @@ void render_orbits(const struct image *final_img,
                    const uint64_t max_iter)
 {
     using std::thread;
+    using std::vector;
 
-    char *comment = final_img->comment;
     const int width = final_img->width;
     const int height = final_img->height;
-    const int threads = THREADS;
+    const uint64_t samples_per_thread = samples / THREADS;
+    vector<thread> threads(THREADS);
+    vector<image> render_image(THREADS, *final_img);
+    vector<uint64_t> render_progress(THREADS);
 
-    fprintf(stderr, "starting %d worker threads\n", threads);
+    fprintf(stderr, "starting %zu worker threads\n", threads.size());
     fflush(stderr);
 
-    // allocate images and threads
-    thread *tsk = new thread[threads];
-    image *img = new image[threads];
-    for (int n = 0; n < threads; n++) {
-        img[n].width = width;
-        img[n].height = height;
-        img[n].comment = NULL;
-        img[n].buffer = new int[width * height]();
-        tsk[n] = thread(render_task, &img[n], samples / threads, 
-                        max_iter, RANDOM_SEED + n);
+    // start worker threads
+    for (int n = 0; n < THREADS; n++) {
+        // allocate image buffer
+        render_image[n].buffer = new int[width * height]();
+        // start thread
+        threads[n] = thread(render_task,
+                            render_image[n],
+                            samples_per_thread,
+                            max_iter,
+                            RANDOM_SEED + n,
+                            &render_progress[n]);
     }
+
+    // main thread shows spinner while waiting for worker threads to finish
+    init_spinner(SPINNER_STR);
+    for (uint64_t total; total < samples;) {
+        total = 0;
+        for (auto subtotal : render_progress) {
+            total += subtotal;
+        }
+        update_spinner((double)total / samples);
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+    finish_spinner(SPINNER_STR);
 
     // wait for all threads to finish
-    for (int n = 0; n < threads; n++) {
-        tsk[n].join();
+    for (thread& thread : threads) {
+        thread.join();
     }
 
-    // show worker images
-    //for (int n = 0; n < threads; n++) {
-    //    write_image(&img[n], stdout);
-    //}
+    // show image from each worker thread
+    // for (image& img : render_image) { write_image(&img, stdout); }
 
     // merge results into final image
-    for (int n = 0; n < threads; n++) {
+    for (image& img : render_image) {
         for (int i = 0; i < width * height; i++) {
-            final_img->buffer[i] += img[n].buffer[i];
+            final_img->buffer[i] += img.buffer[i];
         }
+        // free image.buffer
+        delete[] img.buffer;
     }
-
-    // free images and threads
-    delete[] tsk;
-    for (int n = 0; n < threads; n++) {
-        delete[] img[n].buffer;
-    }
-    delete[] img;
 }

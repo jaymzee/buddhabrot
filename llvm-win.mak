@@ -7,9 +7,11 @@ CXX = clang++
 CFLAGS = -O2 -D_CRT_SECURE_NO_WARNINGS -std=c99 -pedantic -Werror
 CXXFLAGS = -O2 -D_CRT_SECURE_NO_WARNINGS -std=c++17 -pedantic -Werror
 LFLAGS = 
-OBJS = mandelbrot.exe buddhabrot.exe buddhabrotpp.exe buddhabrotmt.exe
+OBJS = mandelbrot.o buddhabrot.o buddhabrotpp.o buddhabrotmt.o \
+       common.o image.o myrandom.o spinner.o
+TARGETS = mandelbrot.exe buddhabrot.exe buddhabrotpp.exe buddhabrotmt.exe
 
-all: $(OBJS)
+all: $(TARGETS)
 
 mandelbrot.exe: mandelbrot.o
 	$(CC) -o $@ $^ $(LFLAGS)
@@ -29,7 +31,7 @@ buddhabrotpp.exe: buddhabrotpp.o image.o spinner.o common.o
 buddhabrotpp.o: buddhabrotpp.cpp
 	$(CXX) $(CXXFLAGS) -c $<
 
-buddhabrotmt.exe: buddhabrotmt.o myrandom.o image.o common.o
+buddhabrotmt.exe: buddhabrotmt.o spinner.o myrandom.o image.o common.o
 	$(CXX) -o $@ $^ $(LFLAGS)
 
 buddhabrotmt.o: buddhabrotmt.cpp
@@ -48,4 +50,4 @@ endif
 	$(CC) $(CFLAGS) -DVERSION='"$(BUILD_VERSION)"' -c $<
 
 clean:
-	rm -f *.o $(OBJS)
+	rm -f $(OBJS) $(TARGETS)
