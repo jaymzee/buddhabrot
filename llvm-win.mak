@@ -15,37 +15,41 @@ mandelbrot.exe: obj/mandelbrot.o
 	$(CC) -o $@ $^ $(LFLAGS)
 
 obj/mandelbrot.o: src/mandelbrot.c
-	$(CC) $(CFLAGS) -c $<
+	$(CC) -o $@ $(CFLAGS) -c $<
 
 buddhabrot.exe: obj/buddhabrot.o obj/image.o obj/spinner.o obj/common.o
 	$(CC) -o $@ $^ $(LFLAGS)
 
 obj/buddhabrot.o: src/buddhabrot.c
-	$(CC) $(CFLAGS) -c $<
+	$(CC) -o $@ $(CFLAGS) -c $<
 
 buddhabrotpp.exe: obj/buddhabrotpp.o obj/image.o obj/spinner.o obj/common.o
 	$(CXX) -o $@ $^ $(LFLAGS)
 
 obj/buddhabrotpp.o: src/buddhabrotpp.cpp
-	$(CXX) $(CXXFLAGS) -c $<
+	$(CXX) -o $@ $(CXXFLAGS) -c $<
 
-buddhabrotmt.exe: obj/buddhabrotmt.o obj/spinner.o obj/myrandom.o obj/image.o obj/common.o
+buddhabrotmt.exe: obj/buddhabrotmt.o obj/spinner.o obj/myrandom.o \
+		  obj/image.o obj/common.o
 	$(CXX) -o $@ $^ $(LFLAGS)
 
 obj/buddhabrotmt.o: src/buddhabrotmt.cpp
-	$(CXX) $(CXXFLAGS) -c $<
+	$(CXX) -o $@ $(CXXFLAGS) -c $<
+
+obj/myrandom.o: src/myrandom.c
+	$(CC) -o $@ $(CFLAGS) -c $<
 
 obj/image.o: src/image.c
-	$(CC) $(CFLAGS) -c $<
+	$(CC) -o $@ $(CFLAGS) -c $<
 
 obj/spinner.o: src/spinner.c
-	$(CC) $(CFLAGS) -c $<
+	$(CC) -o $@ $(CFLAGS) -c $<
 
 obj/common.o: src/common.c
 ifndef BUILD_VERSION
 	$(error environment variable BUILD_VERSION not set)
 endif
-	$(CC) $(CFLAGS) -DVERSION='"$(BUILD_VERSION)"' -c $<
+	$(CC) -o $@ $(CFLAGS) -DVERSION='"$(BUILD_VERSION)"' -c $<
 
 clean:
 	rm -f obj/*.o

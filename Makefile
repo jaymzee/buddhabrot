@@ -25,7 +25,8 @@ buddhabrotpp: obj/buddhabrotpp.o obj/image.o obj/spinner.o obj/common.o
 obj/buddhabrotpp.o: src/buddhabrotpp.cpp
 	$(CXX) -o $@ $(CXXFLAGS) -c $<
 
-buddhabrotmt: obj/buddhabrotmt.o obj/spinner.o obj/myrandom.o obj/image.o obj/common.o
+buddhabrotmt: obj/buddhabrotmt.o obj/spinner.o obj/myrandom.o obj/image.o \
+	      obj/common.o
 	$(CXX) -o $@ $^ $(LFLAGS) -pthread
 
 obj/buddhabrotmt.o: src/buddhabrotmt.cpp
