@@ -1,5 +1,7 @@
 # buddhabrot
-**mandelbrot**      render traditional mandelbrot  
+render the probability distribution over the trajectories of points that escape the Mandelbrot fractal
+
+**mandelbrot**      render traditional mandelbrot set  
 **buddhabrot**      render buddhabrot (C implementation, 2x to 3x faster)  
 **buddhabrotpp**    render buddhabrot (C++ implementation using complex.h)  
 **buddhabrotmt**    render buddhabrot (multithreaded implementation, fastest)  
