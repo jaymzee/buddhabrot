@@ -8,7 +8,8 @@
 /* render buddhabrot (using c++ complex type) */
 void render_orbits(const struct image *img,
                    const uint64_t samples,
-                   const uint64_t max_iter)
+                   const uint64_t max_iter,
+                   const uint32_t seed)
 {
     int *const buf = img->buffer;
     const int w = img->width;
@@ -16,7 +17,7 @@ void render_orbits(const struct image *img,
     const uint64_t samp_chunk = samples / 1000;
     std::complex<double> z, c;
 
-    srand(RANDOM_SEED);
+    srand(seed);
     init_spinner(SPINNER_STR);
     for (uint64_t n = 0; n < samples; n++) {
         if (samp_chunk > 0 && (n % samp_chunk == 0)) {

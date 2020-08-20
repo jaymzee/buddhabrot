@@ -7,7 +7,8 @@
 /* render buddhabrot (c implementation) */
 void render_orbits(const struct image *img,
                    const uint64_t samples,
-                   const uint64_t max_iter)
+                   const uint64_t max_iter,
+                   const uint32_t seed)
 {
     int *const buf = img->buffer;
     const int w = img->width;
@@ -15,7 +16,7 @@ void render_orbits(const struct image *img,
     const uint64_t samp_chunk = samples / 1000;
     double zr, zi, zr2, zi2, cr, ci;
 
-    srand(RANDOM_SEED);    /* seed random number generator */
+    srand(seed);    /* seed random number generator */
     init_spinner(SPINNER_STR);
     for (uint64_t n = 0; n < samples; n++) {
         if (samp_chunk > 0 && (n % samp_chunk == 0)) {

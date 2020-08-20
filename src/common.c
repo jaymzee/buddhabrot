@@ -23,16 +23,17 @@ double X1 =  0.9;
 double Y0 = -1.3;
 double Y1 =  1.3;
 double ESCAPE_MAG = 2.2;
-uint32_t RANDOM_SEED = 42;
 int THREADS = 2;    /* Number of worker threads */
 /* version baked in during build */
 const volatile char VERSION_STR[] = VERSION;
 /* executable filename */
-char EXEC_NAME[256] = "buddhabrot";  
+char EXEC_NAME[256] = "buddhabrot";
 
 void add_image_comments(const struct image *img,
                         int argc, char *argv[],
-                        uint64_t samples, uint64_t max_iter)
+                        uint64_t samples,
+                        uint64_t max_iter,
+                        uint32_t seed)
 {
     char buf[80];
 
@@ -49,7 +50,7 @@ void add_image_comments(const struct image *img,
     strcat(img->comment, buf);
     sprintf(buf, "\n# max iterations: %llu", (unsigned long long)max_iter);
     strcat(img->comment, buf);
-    sprintf(buf, "\n# seed: %d", RANDOM_SEED);
+    sprintf(buf, "\n# seed: %u", seed);
     strcat(img->comment, buf);
     sprintf(buf, "\n# escape magnitude: %g", ESCAPE_MAG);
     strcat(img->comment, buf);
@@ -79,6 +80,7 @@ int main(int argc, char *argv[])
     struct image img = { NULL, 16, 16, NULL };
     uint64_t max_iter = 20;
     uint64_t samples = 1000;
+    uint32_t seed = 42;
     const char *fname = NULL;
 
     /* extract basename of executable */
@@ -108,10 +110,10 @@ int main(int argc, char *argv[])
             img.width = atoi(argv[i] + 2);
         } else if (strncmp("-h", argv[i], 2) == 0) {
             img.height = atoi(argv[i] + 2);
+        } else if (strncmp("-d", argv[i], 2) == 0) {
+            seed = atoi(argv[i] + 2);
         } else if (strncmp("-e", argv[i], 2) == 0) {
             ESCAPE_MAG = atof(argv[i] + 2);
-        } else if (strncmp("-d", argv[i], 2) == 0) {
-            RANDOM_SEED = atoi(argv[i] + 2);
         } else if (strncmp("-t", argv[i], 2) == 0) {
             THREADS = atoi(argv[i] + 2);
         } else if (strncmp("-r", argv[i], 2) == 0) {
@@ -159,8 +161,8 @@ int main(int argc, char *argv[])
     img.comment = malloc(4096); /* 4K is plenty of room for comments */
 
     /* render image */
-    add_image_comments(&img, argc, argv, samples, max_iter);
-    render_orbits(&img, samples, max_iter);
+    add_image_comments(&img, argc, argv, samples, max_iter, seed);
+    render_orbits(&img, samples, max_iter, seed);
 
     /* write image */
     write_image(&img, outfile);

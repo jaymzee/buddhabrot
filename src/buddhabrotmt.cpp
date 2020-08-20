@@ -65,7 +65,8 @@ void render_task(const image& img,
 /* render buddhabrot (multithreaded implementation) */
 void render_orbits(const struct image *final_img,
                    const uint64_t samples,
-                   const uint64_t max_iter)
+                   const uint64_t max_iter,
+                   const uint32_t seed)
 {
     using std::thread;
     using std::vector;
@@ -79,16 +80,23 @@ void render_orbits(const struct image *final_img,
     char spinner_str[128];
     sprintf(spinner_str, "%s with %d threads", SPINNER_STR, THREADS);
 
-    // start worker threads
     for (int n = 0; n < THREADS; n++) {
-        // allocate image buffer
+        uint32_t th_seed = seed + n;
+        char thread_cmd_line[128];
+        char *thread_argv[2] = { EXEC_NAME, thread_cmd_line };
+
+        // allocate image resources
         render_image[n].buffer = new int[width * height]();
-        // start thread
+        render_image[n].comment = new char[4096];
+        sprintf(thread_cmd_line, "starting thread %d ...", n);
+        add_image_comments(&render_image[n], 2, thread_argv, samples_per_thread, max_iter, th_seed);
+
+        // start worker thread
         threads[n] = thread(render_task,
                             render_image[n],
                             samples_per_thread,
                             max_iter,
-                            RANDOM_SEED + n,
+                            th_seed,
                             &render_progress[n]);
     }
 
@@ -117,7 +125,8 @@ void render_orbits(const struct image *final_img,
         for (int i = 0; i < width * height; i++) {
             final_img->buffer[i] += img.buffer[i];
         }
-        // free image.buffer
+        // free image resources
         delete[] img.buffer;
+        delete[] img.comment;
     }
 }
