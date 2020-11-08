@@ -102,7 +102,7 @@ void render_orbits(const struct image *final_img,
 
     // main thread shows spinner while waiting for worker threads to finish
     init_spinner(spinner_str);
-    for (uint64_t total; total < samples_per_thread * THREADS;) {
+    for (uint64_t total = 0; total < samples_per_thread * THREADS;) {
         total = 0;
         for (auto subtotal : render_progress) {
             total += subtotal;
@@ -110,12 +110,13 @@ void render_orbits(const struct image *final_img,
         update_spinner((double)total / samples);
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
-    finish_spinner(spinner_str);
 
     // wait for all threads to finish
     for (thread& thread : threads) {
         thread.join();
     }
+
+    finish_spinner(spinner_str);
 
     // show image from each worker thread
     // for (image& img : render_image) { write_image(&img, stdout); }
