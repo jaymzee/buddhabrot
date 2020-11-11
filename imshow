@@ -1,0 +1,33 @@
+#!/usr/bin/wish
+
+# This program draws an image
+# on the canvas widget.
+#
+# if you get can't find package Img, install it with:
+#   sudo apt install libtk-img
+
+package require Img
+
+if { $argc != 1 } {
+    # $argv0 is the full path so it's not like C argv[0] :/
+    puts "imshow displays an image in a window\n"
+    puts "Usage:\timshow image"
+    exit
+}
+
+set filename [lindex $argv 0]
+
+image create photo img -file $filename
+set height [image height img]
+set width [image width img]
+
+canvas .can -height $height -width $width
+.can create image 0 0 -anchor nw -image img
+.can create text 20 20 -anchor nw -fill #fff -font mono \
+    -text "filename:   $filename"
+.can create text 20 40 -anchor nw -fill #fff -font mono \
+    -text "dimensions: ${width}x${height}"
+pack .can
+
+wm title . imshow
+wm geometry . +300+300
