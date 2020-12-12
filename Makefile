@@ -5,45 +5,47 @@ CXXFLAGS = -O2 -std=c++17 -pedantic -Werror
 LFLAGS = -lm
 TARGETS = mandelbrot buddhabrot buddhabrotpp buddhabrotmt
 
+vpath %.h src
+vpath %.c src
+vpath %.cpp src
+vpath %.o obj
+
 all: $(TARGETS)
 
-mandelbrot: $(addprefix obj/, mandelbrot.o)
+mandelbrot: mandelbrot.o
 	$(CC) -o $@ $^ $(LFLAGS)
 
-obj/mandelbrot.o: $(addprefix src/, mandelbrot.c)
+obj/mandelbrot.o: mandelbrot.c
 	$(CC) -o $@ $(CFLAGS) -c $<
 
-buddhabrot: $(addprefix obj/, buddhabrot.o image.o spinner.o common.o)
+buddhabrot: buddhabrot.o image.o spinner.o common.o
 	$(CC) -o $@ $^ $(LFLAGS)
 
-obj/buddhabrot.o: $(addprefix src/, buddhabrot.c image.h spinner.h common.h)
+obj/buddhabrot.o: buddhabrot.c image.h spinner.h common.h
 	$(CC) -o $@ $(CFLAGS) -c $<
 
-buddhabrotpp: $(addprefix obj/, buddhabrotpp.o image.o spinner.o common.o)
+buddhabrotpp: buddhabrotpp.o image.o spinner.o common.o
 	$(CXX) -o $@ $^ $(LFLAGS)
 
-obj/buddhabrotpp.o: $(addprefix src/, buddhabrotpp.cpp \
-		      image.h spinner.h common.h)
+obj/buddhabrotpp.o: buddhabrotpp.cpp image.h spinner.h common.h
 	$(CXX) -o $@ $(CXXFLAGS) -c $<
 
-buddhabrotmt: $(addprefix obj/, buddhabrotmt.o \
-		myrandom.o image.o spinner.o common.o)
+buddhabrotmt: buddhabrotmt.o myrandom.o image.o spinner.o common.o
 	$(CXX) -o $@ $^ $(LFLAGS) -pthread
 
-obj/buddhabrotmt.o: $(addprefix src/, buddhabrotmt.cpp \
-		      myrandom.h image.h spinner.h common.h)
+obj/buddhabrotmt.o: buddhabrotmt.cpp myrandom.h image.h spinner.h common.h
 	$(CXX) -o $@ $(CXXFLAGS) -pthread -c $<
 
-obj/myrandom.o: $(addprefix src/, myrandom.c myrandom.h)
+obj/myrandom.o: myrandom.c myrandom.h
 	$(CC) -o $@ $(CFLAGS) -c $<
 
-obj/image.o: $(addprefix src/, image.c image.h)
+obj/image.o: image.c image.h
 	$(CC) -o $@ $(CFLAGS) -c $<
 
-obj/spinner.o: $(addprefix src/, spinner.c spinner.h)
+obj/spinner.o: spinner.c spinner.h
 	$(CC) -o $@ $(CFLAGS) -c $<
 
-obj/common.o: $(addprefix src/, common.c common.h image.h)
+obj/common.o: common.c common.h image.h
 ifndef BUILD_VERSION
 	$(error environment variable BUILD_VERSION not set)
 endif
