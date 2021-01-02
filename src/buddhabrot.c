@@ -3,13 +3,13 @@
 #include "image.h"
 #include "spinner.h"
 #include "common.h"
-#include "lfsr.h"
+#include "random.h"
 
 /* render buddhabrot (c implementation) */
 void render_orbits(const struct image *img,
                    const uint64_t samples,
                    const uint64_t max_iter,
-                   uint64_t seed)
+                   uint32_t seed)
 {
     int *const buf = img->buffer;
     const int w = img->width;
@@ -23,8 +23,8 @@ void render_orbits(const struct image *img,
             update_spinner((double)n / samples);
         }
         {
-            const double rr = (double)lfsr(&seed) / (double)LFSR_MAX;
-            const double ri = (double)lfsr(&seed) / (double)LFSR_MAX;
+            const double rr = (double)my_rand(&seed) / (double)RANDOM_MAX;
+            const double ri = (double)my_rand(&seed) / (double)RANDOM_MAX;
             cr = rr * (X1 - X0) + X0;
             ci = ri * (Y1 - Y0) + Y0;
         }

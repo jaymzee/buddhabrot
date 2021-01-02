@@ -9,8 +9,6 @@
 #include "common.h"
 #include "image.h"
 
-#include "lfsr.h"
-
 /*
    X0,Y0,X1,Y1  define the coordinate range (lower left to upper right) of
                 the region to render
@@ -35,7 +33,7 @@ void add_image_comments(const struct image *img,
                         int argc, char *argv[],
                         uint64_t samples,
                         uint64_t max_iter,
-                        uint64_t seed)
+                        uint32_t seed)
 {
     char buf[80];
 

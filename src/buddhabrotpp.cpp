@@ -4,13 +4,13 @@
 #include "image.h"
 #include "spinner.h"
 #include "common.h"
-#include "lfsr.h"
+#include "random.h"
 
 /* render buddhabrot (using c++ complex type) */
 void render_orbits(const struct image *img,
                    const uint64_t samples,
                    const uint64_t max_iter,
-                   uint64_t seed)
+                   uint32_t seed)
 {
     int *const buf = img->buffer;
     const int w = img->width;
@@ -24,8 +24,8 @@ void render_orbits(const struct image *img,
             update_spinner((double)n / samples);
         }
         {
-            const double rre = (double)lfsr(&seed) / (double)LFSR_MAX;
-            const double rim = (double)lfsr(&seed) / (double)LFSR_MAX;
+            const double rre = (double)my_rand(&seed) / (double)RANDOM_MAX;
+            const double rim = (double)my_rand(&seed) / (double)RANDOM_MAX;
             c.real(rre * (X1 - X0) + X0);
             c.imag(rim * (Y1 - Y0) + Y0);
         }
