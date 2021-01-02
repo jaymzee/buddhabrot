@@ -6,14 +6,14 @@
 #include <vector>
 #include "common.h"
 #include "image.h"
-#include "myrandom.h"
+#include "lfsr.h"
 #include "spinner.h"
 
 /* task run per thread */
 void render_task(const image& img,
                  uint64_t samples,
                  uint64_t max_iter,
-                 uint32_t seed,
+                 uint64_t seed,
                  uint64_t* progress)
 {
     int *const buf = img.buffer;
@@ -21,13 +21,11 @@ void render_task(const image& img,
     const int h = img.height;
     double zr, zi, zr2, zi2, cr, ci;
 
-    init_random(seed);
-
     for (uint64_t n = 0; n < samples; n++) {
         *progress = n + 1;
         {
-            const double rr = (double)get_random(&seed) / RAND_MAX;
-            const double ri = (double)get_random(&seed) / RAND_MAX;
+            const double rr = (double)random(&seed) / (double)RANDOM_MAX;
+            const double ri = (double)random(&seed) / (double)RANDOM_MAX;
             cr = rr * (X1 - X0) + X0;
             ci = ri * (Y1 - Y0) + Y0;
         }
@@ -66,7 +64,7 @@ void render_task(const image& img,
 void render_orbits(const struct image *final_img,
                    const uint64_t samples,
                    const uint64_t max_iter,
-                   const uint32_t seed)
+                   const uint64_t seed)
 {
     using std::thread;
     using std::vector;

@@ -9,6 +9,8 @@
 #include "common.h"
 #include "image.h"
 
+#include "lfsr.h"
+
 /*
    X0,Y0,X1,Y1  define the coordinate range (lower left to upper right) of
                 the region to render
@@ -33,7 +35,7 @@ void add_image_comments(const struct image *img,
                         int argc, char *argv[],
                         uint64_t samples,
                         uint64_t max_iter,
-                        uint32_t seed)
+                        uint64_t seed)
 {
     char buf[80];
 
@@ -50,7 +52,7 @@ void add_image_comments(const struct image *img,
     strcat(img->comment, buf);
     sprintf(buf, "\n# max iterations: %llu", (unsigned long long)max_iter);
     strcat(img->comment, buf);
-    sprintf(buf, "\n# seed: %u", seed);
+    sprintf(buf, "\n# seed: %llu", seed);
     strcat(img->comment, buf);
     sprintf(buf, "\n# escape magnitude: %g", ESCAPE_MAG);
     strcat(img->comment, buf);
@@ -83,6 +85,10 @@ int main(int argc, char *argv[])
     uint32_t seed = 42;
     const char *fname = NULL;
 
+    unsigned long long num = 42;
+
+    printf("%llu\n", random(&num));
+    printf("%llu\n", random(&num));
     /* extract basename of executable */
     if (argc > 0) {
 #ifdef __unix__

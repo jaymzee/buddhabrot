@@ -22,25 +22,25 @@ mandelbrot.exe: mandelbrot.o
 obj/mandelbrot.o: mandelbrot.c
 	$(CC) -o $@ $(CFLAGS) -c $<
 
-buddhabrot.exe: buddhabrot.o image.o spinner.o common.o
+buddhabrot.exe: buddhabrot.o lfsr.o image.o spinner.o common.o
 	$(CC) -o $@ $^ $(LFLAGS)
 
-obj/buddhabrot.o: buddhabrot.c image.h spinner.h common.h
+obj/buddhabrot.o: buddhabrot.c lfsr.h image.h spinner.h common.h
 	$(CC) -o $@ $(CFLAGS) -c $<
 
-buddhabrotpp.exe: buddhabrotpp.o image.o spinner.o common.o
+buddhabrotpp.exe: buddhabrotpp.o lfsr.o image.o spinner.o common.o
 	$(CXX) -o $@ $^ $(LFLAGS)
 
-obj/buddhabrotpp.o: buddhabrotpp.cpp image.h spinner.h common.h
+obj/buddhabrotpp.o: buddhabrotpp.cpp lfsr.h image.h spinner.h common.h
 	$(CXX) -o $@ $(CXXFLAGS) -c $<
 
-buddhabrotmt.exe: buddhabrotmt.o myrandom.o image.o spinner.o common.o
+buddhabrotmt.exe: buddhabrotmt.o lfsr.o image.o spinner.o common.o
 	$(CXX) -o $@ $^ $(LFLAGS)
 
-obj/buddhabrotmt.o: buddhabrotmt.cpp myrandom.h image.h spinner.h common.h
+obj/buddhabrotmt.o: buddhabrotmt.cpp lfsr.h image.h spinner.h common.h
 	$(CXX) -o $@ $(CXXFLAGS) -c $<
 
-obj/myrandom.o: myrandom.c myrandom.h
+obj/lfsr.o: lfsr.c lfsr.h
 	$(CC) -o $@ $(CFLAGS) -c $<
 
 obj/image.o: image.c image.h

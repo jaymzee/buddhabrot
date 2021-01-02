@@ -33,14 +33,14 @@ extern char EXEC_NAME[];
 void render_orbits(const struct image *img,
                    uint64_t samples,
                    uint64_t max_iter,
-                   uint32_t seed);
+                   uint64_t seed);
 
 void add_image_comments(const struct image *img,
                         int argc,
                         char *argv[],
                         uint64_t samples,
                         uint64_t max_iter,
-                        uint32_t seed);
+                        uint64_t seed);
 
 #ifdef __cplusplus
 }
