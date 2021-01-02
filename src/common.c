@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
     struct image img = { NULL, 16, 16, NULL };
     uint64_t max_iter = 20;
     uint64_t samples = 1000;
-    uint32_t seed = 1;
+    uint32_t seed = 42;
     const char *fname = NULL;
 
     /* extract basename of executable */

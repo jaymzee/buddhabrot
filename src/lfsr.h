@@ -8,7 +8,8 @@ extern "C" {
 #include <stdint.h>
 #endif
 
-#define LFSR_MAX 0xFFFFFFFFFFFFFFFF
+#define LFSR_MAX 0xFFFFFFFF
+#define LFSR_POLY 0xaa2255dd
 
 /* get a random number */
 uint64_t lfsr(uint64_t *seedp);
