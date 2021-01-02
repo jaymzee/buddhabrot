@@ -24,8 +24,8 @@ void render_task(const image& img,
     for (uint64_t n = 0; n < samples; n++) {
         *progress = n + 1;
         {
-            const double rr = (double)random(&seed) / (double)RANDOM_MAX;
-            const double ri = (double)random(&seed) / (double)RANDOM_MAX;
+            const double rr = (double)lfsr(&seed) / (double)LFSR_MAX;
+            const double ri = (double)lfsr(&seed) / (double)LFSR_MAX;
             cr = rr * (X1 - X0) + X0;
             ci = ri * (Y1 - Y0) + Y0;
         }

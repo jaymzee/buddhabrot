@@ -24,8 +24,8 @@ void render_orbits(const struct image *img,
             update_spinner((double)n / samples);
         }
         {
-            const double rre = (double)random(&seed) / (double)RANDOM_MAX;
-            const double rim = (double)random(&seed) / (double)RANDOM_MAX;
+            const double rre = (double)lfsr(&seed) / (double)LFSR_MAX;
+            const double rim = (double)lfsr(&seed) / (double)LFSR_MAX;
             c.real(rre * (X1 - X0) + X0);
             c.imag(rim * (Y1 - Y0) + Y0);
         }

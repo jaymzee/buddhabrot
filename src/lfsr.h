@@ -8,10 +8,10 @@ extern "C" {
 #include <stdint.h>
 #endif
 
-#define RANDOM_MAX 0xFFFFFFFFFFFFFFFF
+#define LFSR_MAX 0xFFFFFFFFFFFFFFFF
 
 /* get a random number */
-uint64_t random(uint64_t *seedp);
+uint64_t lfsr(uint64_t *seedp);
 
 #ifdef __cplusplus
 }
