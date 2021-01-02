@@ -1,6 +1,6 @@
 #include "lfsr.h"
 
-#define POLY 0x800000000000000D
+#define POLY 0x80000000000019E2
 
 /* get a random number */
 uint64_t lfsr(uint64_t *seedp)
