@@ -8,7 +8,7 @@ extern "C" {
 #include <stdint.h>
 #endif
 
-#define RANDOM_MAX 0xFFFFFFFF
+#define RANDOM_MAX 0x7FFFFFFF
 
 /* get a random number */
 uint32_t my_rand(uint32_t *seedp);
