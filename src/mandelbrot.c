@@ -93,16 +93,21 @@ void write_header(void) {
         fputs("\x1b[2J\x1b[0;0H", stdout);
     }
     */
-    if (output_type == PGM) {
+
+    switch (output_type) {
+    case PGM:
         printf("P2\n# iterations=%d", MAX_ITER);
         printf(", coordinate range=(%g, %g)", X0, Y0);
         printf(" to (%g, %g)\n", X1, Y1);
         printf("%d %d\n255\n", RES_X, RES_Y);
-    }
-    if (output_type == NP) {
+        break;
+    case NP:
         printf("# iterations=%d", MAX_ITER);
         printf(", coordinate range=(%g, %g)", X0, Y0);
         printf(" to (%g, %g)\n", X1, Y1);
+        break;
+    default:
+        break;
     }
 }
 
@@ -110,19 +115,8 @@ void write_pixel(int n) {
     static int count = 0;
     int color;
 
-    if (output_type == ASCII) {
-        count += 1;
-        if (n == MAX_ITER) {
-            putchar('*');
-        } else {
-            putchar(' ');
-        }
-        if (count >= RES_X) {
-            putchar('\n');
-            count = 0;
-        }
-    }
-    if (output_type == PGM) {
+    switch (output_type) {
+    case PGM:
         /* PGM limit line length to 70 chars */
         count += 4;
         color = 255 * n / MAX_ITER;
@@ -136,8 +130,8 @@ void write_pixel(int n) {
             putchar('\n');
             count = 0;
         }
-    }
-    if (output_type == NP) {
+        break;
+    case NP:
         count += 1;
         color = n;
         printf("%d ", color);
@@ -145,6 +139,20 @@ void write_pixel(int n) {
             putchar('\n');
             count = 0;
         }
+        break;
+    case ASCII:
+    default:
+        count += 1;
+        if (n == MAX_ITER) {
+            putchar('*');
+        } else {
+            putchar(' ');
+        }
+        if (count >= RES_X) {
+            putchar('\n');
+            count = 0;
+        }
+        break;
     }
 }
 
