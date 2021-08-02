@@ -1,0 +1,58 @@
+#!/usr/bin/env python
+
+# display a numpy array (text format) in the kitty terminal
+
+import sys
+import itertools
+from base64 import standard_b64encode
+import numpy as np
+
+flatten = itertools.chain.from_iterable
+
+# kitty stuff
+
+def serialize_gfxcmd(**cmd):
+    payload = cmd.pop('payload', None)
+    head = ','.join('{}={}'.format(k, v) for k, v in cmd.items())
+    resp = [b'\033_G', head.encode('ascii')]
+    if payload:
+        resp.extend([b';', payload])
+    resp.append(b'\033\\')
+    return b''.join(resp)
+
+
+def write_chunked(**cmd):
+    data = standard_b64encode(cmd.pop('data'))
+    while data:
+        chunk, data = data[:4096], data[4096:]
+        m = 1 if data else 0
+        sys.stdout.buffer.write(serialize_gfxcmd(payload=chunk, m=m, **cmd))
+        sys.stdout.flush()
+        cmd.clear()
+
+
+# convert the 2D array into rgb data bytes
+def to_rgb(arr2d):
+    height, width = arr2d.shape
+    max_luminance = np.max(arr2d)
+    arr1d = arr2d.reshape(width * height)
+    mono = 255 * arr1d / max_luminance
+    rgb = np.array([mono, mono, mono], dtype=np.uint8).T
+    data = bytes(rgb.reshape(mono.size * 3))
+    return {'s':width, 'v':height, 'data':data}
+
+
+def main(argv):
+    if len(argv) < 2:
+        img = to_rgb(np.loadtxt(sys.stdin))
+        write_chunked(a='T', f=24, **img)
+        sys.stdout.write('\n')
+    else:
+        for filename in argv[1:]:
+            img = to_rgb(np.loadtxt(filename))
+            write_chunked(a='T', f=24, **img)
+            sys.stdout.write(f"\n{filename}: {img['s']}x{img['v']}\n")
+
+
+if __name__ == '__main__':
+    main(sys.argv)
