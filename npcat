@@ -32,7 +32,9 @@ def write_chunked(**cmd):
 
 
 # convert the 2D array into rgb data bytes
-def to_rgb(arr2d):
+def to_rgb(arr2d, transpose):
+    if transpose:
+        arr2d = arr2d.T
     height, width = arr2d.shape
     max_luminance = np.max(arr2d)
     arr1d = arr2d.reshape(width * height)
@@ -43,15 +45,23 @@ def to_rgb(arr2d):
 
 
 def main(argv):
-    if len(argv) < 2:
-        img = to_rgb(np.loadtxt(sys.stdin))
-        write_chunked(a='T', f=24, **img)
-        sys.stdout.write('\n')
-    else:
-        for filename in argv[1:]:
-            img = to_rgb(np.loadtxt(filename))
+    transpose = False
+    filenames = argv[1:]
+
+    if len(argv) > 1:
+        if argv[1] == '-t':
+            transpose = True
+            filenames = argv[2:]
+
+    if len(filenames) > 0:
+        for filename in filenames:
+            img = to_rgb(np.loadtxt(filename), transpose)
             write_chunked(a='T', f=24, **img)
             sys.stdout.write(f"\n{filename}: {img['s']}x{img['v']}\n")
+    else:
+        img = to_rgb(np.loadtxt(sys.stdin), transpose)
+        write_chunked(a='T', f=24, **img)
+        sys.stdout.write('\n')
 
 
 if __name__ == '__main__':
