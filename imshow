@@ -1,33 +1,73 @@
-#!/usr/bin/wish
+#!/usr/bin/env python
 
-# This program draws an image
-# on the canvas widget.
-#
-# if you get can't find package Img, install it with:
-#   sudo apt install libtk-img
+"""
+imshow converts a text file to a PNG image using matplotlib library
 
-package require Img
+use this for generating images with various colormaps and
+for displaying with matplotlib.pyplot
+"""
 
-if { $argc != 1 } {
-    # $argv0 is the full path so it's not like C argv[0] :/
-    puts "imshow displays an image in a window\n"
-    puts "Usage:\timshow image"
-    exit
-}
+import sys
+import numpy as np
+import matplotlib.pyplot as plt
+from show.arrayutils import load_array, clip_array
+from show.fileutils import change_extension
 
-set filename [lindex $argv 0]
 
-image create photo img -file $filename
-set height [image height img]
-set width [image width img]
+def print_usage():
+    print('Usage: imshow [options] filename')
+    print('Options:')
+    print('    -t         transpose image')
+    print('    -m255      set upper bound on magnitude')
+    print('    -cviridis  colormap to use')
 
-canvas .can -height $height -width $width
-.can create image 0 0 -anchor nw -image img
-.can create text 20 20 -anchor nw -fill #fff -font mono \
-    -text "filename:   $filename"
-.can create text 20 40 -anchor nw -fill #fff -font mono \
-    -text "dimensions: ${width}x${height}"
-pack .can
 
-wm title . imshow
-wm geometry . +300+300
+def main():
+    in_filename = None
+    transpose = False
+    clip_threshold = None
+    colormap = 'gray'
+
+    # process command line arguments
+    for arg in sys.argv[1:]:
+        if arg[:2] == '-t':
+            transpose = True
+        elif arg[:2] == '-m':
+            clip_threshold = int(arg[2:])
+        elif arg[:2] == '-c':
+            colormap = arg[2:]
+        elif arg[:1] != '-' and in_filename is None:
+            in_filename = arg
+        else:
+            print_usage()
+            sys.exit(1)
+
+    if in_filename is None:
+        print_usage()
+        sys.exit(1)
+
+    # read and process input file
+    try:
+        arr = load_array(in_filename)
+    except IOError as err:
+        print(err)
+        sys.exit(1)
+
+    if clip_threshold is not None:
+        arr = clip_array(arr, clip_threshold)
+
+    if transpose:
+        arr = np.fliplr(arr.T)
+
+    # show image
+    plt.imshow(arr, cmap=colormap)
+    plt.show()
+
+    # write image as PNG file
+    out_filename = change_extension(in_filename, "png")
+    print("writing PNG image to %s" % out_filename)
+    plt.imsave(out_filename, arr, cmap=colormap)
+
+
+if __name__ == "__main__":
+    main()
