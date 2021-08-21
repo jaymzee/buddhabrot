@@ -56,8 +56,9 @@ def main(argv):
     if len(filenames) > 0:
         for filename in filenames:
             img = to_rgb(np.loadtxt(filename), transpose)
+            sys.stdout.write(f"{filename}: {img['s']}x{img['v']}\n")
             write_chunked(a='T', f=24, **img)
-            sys.stdout.write(f"\n{filename}: {img['s']}x{img['v']}\n")
+            sys.stdout.write('\n')
     else:
         img = to_rgb(np.loadtxt(sys.stdin), transpose)
         write_chunked(a='T', f=24, **img)
